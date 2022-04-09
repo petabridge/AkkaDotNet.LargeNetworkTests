@@ -4,6 +4,8 @@
     <TargetFramework>$(NetCoreFramework)</TargetFramework>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
     <OutputType>Exe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,12 +15,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Akka.Cluster" Version="$(AkkaVersion)" />
-    <PackageReference Include="Akka.DependencyInjection" Version="$(AkkaVersion)" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Petabridge.Cmd.Cluster" Version="$(PbmVersion)" />
     <PackageReference Include="Petabridge.Cmd.Remote" Version="$(PbmVersion)" />
-    <PackageReference Include="Akka.Bootstrap.Docker" Version="$(AkkaBootstrapDockerVersion)"/>
+    <PackageReference Include="Akka.Bootstrap.Docker" Version="$(AkkaBootstrapDockerVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\shared\AkkaDotNet.Infrastructure\AkkaDotNet.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
