@@ -11,7 +11,7 @@ namespace AkkaDotNet.Infrastructure.Configuration;
 /// <summary>
 /// Designed to add Akka.Cluster.Bootstrap and Akka.Management to our applications
 /// </summary>
-public static class ClusterBootstrapExtensions
+public static class StressHostingExtensions
 {
     public static Config CreateDiscoveryConfig(AkkaClusterOptions options)
     {
@@ -66,7 +66,6 @@ public static class ClusterBootstrapExtensions
         if (options.UseKubernetesDiscovery)
         {
             var bootstrapConfig = CreateDiscoveryConfig(options)
-                .WithFallback(SbrConfig)
                 .WithFallback(ClusterBootstrap.DefaultConfiguration())
                 .WithFallback(AkkaManagementProvider.DefaultConfiguration());
             
@@ -86,6 +85,7 @@ public static class ClusterBootstrapExtensions
         }
 
         builder = builder
+            .AddHocon(SbrConfig) // need to add SBR regardless of options
             .WithRemoting(options.Hostname, options.Port)
             .WithClustering(clusterOptions);
 
