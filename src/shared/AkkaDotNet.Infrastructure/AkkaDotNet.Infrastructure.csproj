@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>$(NetCoreFramework)</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Akka.Cluster.Hosting" Version="$(AkkaHostingVersion)" />
+        <PackageReference Include="Akka.Discovery" Version="$(AkkaVersion)" />
+        <PackageReference Include="Akka.Management.Cluster.Bootstrap" Version="0.2.4-beta1" />
+    </ItemGroup>
+
+</Project>

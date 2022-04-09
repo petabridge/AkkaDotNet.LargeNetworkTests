@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{957AA980-76E5-4F68-9A13-9DC8764610C0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D141B6BA-4D68-4BD5-8047-280D20D17328}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+		RELEASE_NOTES.md = RELEASE_NOTES.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "frontend", "frontend", "{397C6273-19B5-4DA8-8D1F-09185B0D8A02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkkaDotNet.FrontEnd", "src\frontend\AkkaDotNet.FrontEnd\AkkaDotNet.FrontEnd.csproj", "{696FA3DA-FE78-43B8-B24C-942662B51D2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkkaDotNet.FrontEnd.Tests", "src\frontend\AkkaDotNet.FrontEnd.Tests\AkkaDotNet.FrontEnd.Tests.csproj", "{3358DBCC-E7A8-4CAF-A49C-599CEA2B1A93}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{6E8AB83C-075B-4333-8DFC-17FE9EFDDBA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkkaDotNet.Infrastructure", "src\shared\AkkaDotNet.Infrastructure\AkkaDotNet.Infrastructure.csproj", "{98CB4416-9594-425E-990D-771170F92D36}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{957AA980-76E5-4F68-9A13-9DC8764610C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{957AA980-76E5-4F68-9A13-9DC8764610C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{696FA3DA-FE78-43B8-B24C-942662B51D2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{696FA3DA-FE78-43B8-B24C-942662B51D2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{696FA3DA-FE78-43B8-B24C-942662B51D2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{696FA3DA-FE78-43B8-B24C-942662B51D2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3358DBCC-E7A8-4CAF-A49C-599CEA2B1A93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3358DBCC-E7A8-4CAF-A49C-599CEA2B1A93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3358DBCC-E7A8-4CAF-A49C-599CEA2B1A93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3358DBCC-E7A8-4CAF-A49C-599CEA2B1A93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98CB4416-9594-425E-990D-771170F92D36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98CB4416-9594-425E-990D-771170F92D36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98CB4416-9594-425E-990D-771170F92D36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98CB4416-9594-425E-990D-771170F92D36}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B99E6BB8-642A-4A68-86DF-69567CBA700A}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{696FA3DA-FE78-43B8-B24C-942662B51D2E} = {397C6273-19B5-4DA8-8D1F-09185B0D8A02}
+		{3358DBCC-E7A8-4CAF-A49C-599CEA2B1A93} = {397C6273-19B5-4DA8-8D1F-09185B0D8A02}
+		{98CB4416-9594-425E-990D-771170F92D36} = {6E8AB83C-075B-4333-8DFC-17FE9EFDDBA0}
+	EndGlobalSection
+EndGlobal
