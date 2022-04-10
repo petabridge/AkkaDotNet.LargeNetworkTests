@@ -66,9 +66,6 @@ spec:
         envFrom:
         - configMapRef:
             name: stress-configs
-        livenessProbe:
-          tcpSocket:
-            port: 9221 
         readinessProbe:
           httpGet:
             path: "/ready"
@@ -128,9 +125,6 @@ spec:
         envFrom:
         - configMapRef:
             name: stress-configs
-        livenessProbe:
-          tcpSocket:
-            port: 9221 
         readinessProbe:
           httpGet:
             path: "/ready"
