@@ -5,6 +5,7 @@ using Akka.Hosting;
 using Akka.Management;
 using Akka.Management.Cluster.Bootstrap;
 using Akka.Remote.Hosting;
+using AkkaDotNet.Infrastructure.Actors;
 
 namespace AkkaDotNet.Infrastructure.Configuration;
 
@@ -90,5 +91,14 @@ public static class StressHostingExtensions
             .WithClustering(clusterOptions);
 
         return builder;
+    }
+
+    public static AkkaConfigurationBuilder WithReadyCheckActors(this AkkaConfigurationBuilder builder)
+    {
+        return builder.StartActors((system, registry) =>
+        {
+            var readyCheckActor = system.ActorOf(Props.Create(() => new ReadyCheckActor()), "ready");
+            registry.TryRegister<ReadyCheckActor>(readyCheckActor);
+        });
     }
 }

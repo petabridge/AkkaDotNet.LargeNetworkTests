@@ -11,4 +11,7 @@ builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuil
 {
     configurationBuilder.WithClusterBootstrap(akkaConfiguration.AkkaClusterOptions,
         new[] { ActorSystemConstants.FrontendRole, ActorSystemConstants.DistributedPubSubRole });
+    configurationBuilder.WithReadyCheckActors();
 });
+
+var app = builder.Build();
