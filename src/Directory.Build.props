@@ -2,8 +2,8 @@
   <PropertyGroup>
     <Copyright>Copyright © 2022 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.3.1</VersionPrefix>
-    <PackageReleaseNotes>• First release</PackageReleaseNotes>
+    <VersionPrefix>0.3.2</VersionPrefix>
+    <PackageReleaseNotes>• Fixing issues with /ready HTTP checks interferring with Akka.Cluster.Bootstrap</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
     <PackageProjectUrl>

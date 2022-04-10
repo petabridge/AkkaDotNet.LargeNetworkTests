@@ -37,7 +37,7 @@ app.UseEndpoints(endpoints =>
     {
         var readyCheck = registry.Get<ReadyCheckActor>();
         var checkResult = await readyCheck.Ask<ReadyResult>(ReadyCheck.Instance, TimeSpan.FromSeconds(3));
-        if (checkResult.IsReady)
+        //if (checkResult.IsReady)
             return Results.StatusCode(200);
         return Results.StatusCode(500);
     });

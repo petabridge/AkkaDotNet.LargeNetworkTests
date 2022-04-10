@@ -29,8 +29,7 @@ public static class StressHostingExtensions
                 cluster.bootstrap {{
                     contact-point-discovery {{
                         discovery-method = akka.discovery
-                        port-name = management
-                        required-contact-point-nr = 2
+                        required-contact-point-nr = 3
                         stable-margin = 5s
                         contact-with-all-contact-points = true
                     }}
@@ -94,7 +93,7 @@ public static class StressHostingExtensions
         Debug.Assert(options.Port != null, "options.Port != null");
         builder = builder
             .AddHocon(SbrConfig) // need to add SBR regardless of options
-            .WithRemoting("0.0.0.0", options.Port.Value, options.Hostname)
+            .WithRemoting(options.Hostname, options.Port.Value)
             .WithClustering(clusterOptions)
             .WithPetabridgeCmd(); // start PetabridgeCmd actors too
 

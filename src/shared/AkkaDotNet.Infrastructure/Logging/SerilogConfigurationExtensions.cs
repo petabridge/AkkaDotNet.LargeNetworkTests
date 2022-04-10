@@ -14,7 +14,9 @@ public static class SerilogConfigurationExtensions
     public const string PodNameProperty = "POD_NAME";
     
     public static readonly Config SerilogConfig =
-        @"akka.loggers =[""Akka.Logger.Serilog.SerilogLogger, Akka.Logger.Serilog""]";
+        @"
+        akka.loglevel = DEBUG
+        akka.loggers =[""Akka.Logger.Serilog.SerilogLogger, Akka.Logger.Serilog""]";
     
     public static string GetServiceName()
     {
@@ -34,7 +36,7 @@ public static class SerilogConfigurationExtensions
                 outputTemplate:
                 "[{SERVICE_NAME}][{POD_NAME}][{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}",
                 theme: AnsiConsoleTheme.Literate)
-            .Filter.ByExcluding(ExcludeHealthChecksNormalEvents); // Do not want lots of health check info logs in console
+            .Filter.ByExcluding(ExcludeHealthChecksNormalEvents).MinimumLevel.Debug(); // Do not want lots of health check info logs in console
 
         if (options.EnableSeq)
         {
