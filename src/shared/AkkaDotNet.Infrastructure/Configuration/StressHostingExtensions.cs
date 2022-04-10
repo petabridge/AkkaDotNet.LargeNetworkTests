@@ -1,4 +1,5 @@
-﻿using Akka.Actor;
+﻿using System.Diagnostics;
+using Akka.Actor;
 using Akka.Cluster.Hosting;
 using Akka.Configuration;
 using Akka.Hosting;
@@ -86,12 +87,14 @@ public static class StressHostingExtensions
         else
         {
             // not using K8s discovery - need to populate some seed nodes
-            clusterOptions.SeedNodes = options.SeedNodes.Select(c => Address.Parse(c)).ToArray();
+            if (options.SeedNodes != null)
+                clusterOptions.SeedNodes = options.SeedNodes.Select(c => Address.Parse(c)).ToArray();
         }
 
+        Debug.Assert(options.Port != null, "options.Port != null");
         builder = builder
             .AddHocon(SbrConfig) // need to add SBR regardless of options
-            .WithRemoting(options.Hostname, options.Port)
+            .WithRemoting(options.Hostname, options.Port.Value)
             .WithClustering(clusterOptions)
             .WithPetabridgeCmd(); // start PetabridgeCmd actors too
 
