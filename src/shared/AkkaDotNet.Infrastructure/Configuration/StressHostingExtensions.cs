@@ -94,7 +94,7 @@ public static class StressHostingExtensions
         Debug.Assert(options.Port != null, "options.Port != null");
         builder = builder
             .AddHocon(SbrConfig) // need to add SBR regardless of options
-            .WithRemoting(options.Hostname, options.Port.Value)
+            .WithRemoting("0.0.0.0", options.Port.Value, options.Hostname)
             .WithClustering(clusterOptions)
             .WithPetabridgeCmd(); // start PetabridgeCmd actors too
 

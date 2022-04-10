@@ -7,7 +7,7 @@ set location=%~dp0/environment
 echo "Deploying K8s resources from [%location%] into namespace [%namespace%]"
 
 echo "Creating Namespaces..."
-kubectl create ns "%akkastress%"
+kubectl create ns "%namespace%"
 
 echo "Using namespace [%namespace%] going forward..."
 
