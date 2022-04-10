@@ -4,9 +4,12 @@ using AkkaDotNet.Infrastructure;
 using AkkaDotNet.Infrastructure.Actors;
 using AkkaDotNet.Infrastructure.Configuration;
 using AkkaDotNet.Infrastructure.Logging;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables();
+
+builder.Logging.ClearProviders().AddConsole().AddSerilog();
 
 var akkaConfiguration = builder.Configuration.GetRequiredSection(nameof(StressOptions)).Get<StressOptions>();
 

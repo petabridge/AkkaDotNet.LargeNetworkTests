@@ -10,4 +10,8 @@
       <ProjectReference Include="..\..\shared\AkkaDotNet.Infrastructure\AkkaDotNet.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Serilog.Extensions.Hosting" Version="4.2.0" />
+    </ItemGroup>
+
 </Project>
