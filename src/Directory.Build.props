@@ -25,8 +25,8 @@
     <AkkaHostingVersion>0.2.1</AkkaHostingVersion>
     <AkkaManagementVerison>0.2.4-beta1</AkkaManagementVerison>
     <FluentAssertionsVersion>6.6.0</FluentAssertionsVersion>
-    <AkkaBootstrapDockerVersion>0.5.2</AkkaBootstrapDockerVersion>
     <OTelVersion>1.2.0-rc4</OTelVersion>
     <OTelInstrumentationVersion>1.0.0-rc9.1</OTelInstrumentationVersion>
+    <AkkaBootstrapDockerVersion>0.5.3</AkkaBootstrapDockerVersion>
   </PropertyGroup>
 </Project>
