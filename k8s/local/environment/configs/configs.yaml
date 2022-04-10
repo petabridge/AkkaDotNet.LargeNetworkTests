@@ -1,0 +1,22 @@
+# staging settings
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: stress-configs
+data:
+  # Configuration values can be set as key-value properties
+  environment: Production
+
+  # standard Akka.NET ports for all services
+  StressOptions__AkkaClusterOptions__ManagementPort: "9221"
+  StressOptions__AkkaClusterOptions__ManagementPort: "9228"
+
+  # configure Akka.Management K8s service discovery
+  StressOptions__AkkaClusterOptions__UseKubernetesDiscovery: "true"
+  StressOptions__AkkaClusterOptions__KubernetesDiscoveryOptions__PodNamespace: "akkastress"
+  StressOptions__AkkaClusterOptions__KubernetesDiscoveryOptions__PodLabelSelector: "akkacluster=stress"
+
+  # configure Serilog
+  StressOptions__SerilogOptions__EnableSeq: "true"
+  StressOptions__SerilogOptions__SeqHost: "seq"
+  StressOptions__SerilogOptions__SeqPort: "8988"
