@@ -1,4 +1,4 @@
-﻿using Akka.Actor;
+using Akka.Actor;
 using Akka.Hosting;
 using AkkaDotNet.Infrastructure;
 using AkkaDotNet.Infrastructure.Actors;
@@ -17,7 +17,7 @@ var akkaConfiguration = builder.Configuration.GetRequiredSection(nameof(StressOp
 builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuilder =>
 {
     configurationBuilder.WithClusterBootstrap(akkaConfiguration.AkkaClusterOptions,
-        new[] { ActorSystemConstants.FrontendRole, ActorSystemConstants.DistributedPubSubRole });
+        new[] { ActorSystemConstants.BackendRole, ActorSystemConstants.DistributedPubSubRole });
     configurationBuilder.WithSerilog(akkaConfiguration.SerilogOptions);
     configurationBuilder.WithReadyCheckActors();
 });
@@ -43,6 +43,5 @@ app.UseEndpoints(endpoints =>
     });
 
 });
-
 
 await app.RunAsync();

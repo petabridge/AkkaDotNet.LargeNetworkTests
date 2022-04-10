@@ -1,0 +1,146 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-web
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/path: '/metrics'
+    prometheus.io/port: '80'
+  labels:
+    app: domain-customers
+spec:
+  type: LoadBalancer
+  ports:
+    - name: query-http
+      port: 1880
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: frontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-akka
+  labels:
+    app: frontend
+spec:
+  clusterIP: None
+  ports:
+  - port: 9228
+    name: management
+  - port: 9221
+    name: akka-remote
+  selector:
+    app: frontend
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+    akkacluster: stress
+spec:
+  serviceName: "frontend"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      terminationGracePeriodSeconds: 35
+      containers:
+      - name: frontend
+        image: akkadotnet.frontend:0.3.0
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name:  StressOptions__AkkaClusterOptions__Hostname
+          value: "$(POD_NAME).frontend-akka"
+        envFrom:
+        - configMapRef:
+            name: stress-configs
+        livenessProbe:
+          tcpSocket:
+            port: 9221 
+        readinessProbe:
+          httpGet:
+            path: "/ready"
+            port: 80
+        ports:
+        - containerPort: 9228
+        - containerPort: 9221
+          protocol: TCP
+        - containerPort: 80
+          protocol: TCP
+
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-akka
+  labels:
+    app: backend
+spec:
+  clusterIP: None
+  ports:
+  - port: 9228
+    name: management
+  - port: 9221
+    name: akka-remote
+  selector:
+    app: backend
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: backend
+  labels:
+    app: backend
+    akkacluster: stress
+spec:
+  serviceName: "backend"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      terminationGracePeriodSeconds: 35
+      containers:
+      - name: backend
+        image: akkadotnet.backend:0.3.0
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name:  StressOptions__AkkaClusterOptions__Hostname
+          value: "$(POD_NAME).backend-akka"
+        envFrom:
+        - configMapRef:
+            name: stress-configs
+        livenessProbe:
+          tcpSocket:
+            port: 9221 
+        readinessProbe:
+          httpGet:
+            path: "/ready"
+            port: 80
+        ports:
+        - containerPort: 9228
+        - containerPort: 9221
+          protocol: TCP
+        - containerPort: 80
+          protocol: TCP
