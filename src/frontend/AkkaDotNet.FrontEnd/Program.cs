@@ -3,6 +3,7 @@ using Akka.Hosting;
 using AkkaDotNet.Infrastructure;
 using AkkaDotNet.Infrastructure.Actors;
 using AkkaDotNet.Infrastructure.Configuration;
+using AkkaDotNet.Infrastructure.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables();
@@ -13,6 +14,7 @@ builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuil
 {
     configurationBuilder.WithClusterBootstrap(akkaConfiguration.AkkaClusterOptions,
         new[] { ActorSystemConstants.FrontendRole, ActorSystemConstants.DistributedPubSubRole });
+    configurationBuilder.WithSerilog(akkaConfiguration.SerilogOptions);
     configurationBuilder.WithReadyCheckActors();
 });
 

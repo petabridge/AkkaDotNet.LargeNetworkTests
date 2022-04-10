@@ -6,6 +6,10 @@ using Akka.Management;
 using Akka.Management.Cluster.Bootstrap;
 using Akka.Remote.Hosting;
 using AkkaDotNet.Infrastructure.Actors;
+using Petabridge.Cmd.Cluster;
+using Petabridge.Cmd.Cluster.Sharding;
+using Petabridge.Cmd.Host;
+using Petabridge.Cmd.Remote;
 
 namespace AkkaDotNet.Infrastructure.Configuration;
 
@@ -88,7 +92,8 @@ public static class StressHostingExtensions
         builder = builder
             .AddHocon(SbrConfig) // need to add SBR regardless of options
             .WithRemoting(options.Hostname, options.Port)
-            .WithClustering(clusterOptions);
+            .WithClustering(clusterOptions)
+            .WithPetabridgeCmd(); // start PetabridgeCmd actors too
 
         return builder;
     }
@@ -99,6 +104,18 @@ public static class StressHostingExtensions
         {
             var readyCheckActor = system.ActorOf(Props.Create(() => new ReadyCheckActor()), "ready");
             registry.TryRegister<ReadyCheckActor>(readyCheckActor);
+        });
+    }
+
+    public static AkkaConfigurationBuilder WithPetabridgeCmd(this AkkaConfigurationBuilder builder)
+    {
+        return builder.StartActors((system, registry) =>
+        {
+            var petabridgeCmd = PetabridgeCmd.Get(system);
+            petabridgeCmd.RegisterCommandPalette(ClusterCommands.Instance);
+            petabridgeCmd.RegisterCommandPalette(ClusterShardingCommands.Instance);
+            petabridgeCmd.RegisterCommandPalette(new RemoteCommands());
+            petabridgeCmd.Start();
         });
     }
 }

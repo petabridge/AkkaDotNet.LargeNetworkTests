@@ -16,8 +16,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-    <PackageReference Include="Petabridge.Cmd.Cluster" Version="$(PbmVersion)" />
-    <PackageReference Include="Petabridge.Cmd.Remote" Version="$(PbmVersion)" />
     <PackageReference Include="Akka.Bootstrap.Docker" Version="$(AkkaBootstrapDockerVersion)" />
   </ItemGroup>
 

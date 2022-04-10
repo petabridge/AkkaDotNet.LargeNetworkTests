@@ -1,10 +1,14 @@
-﻿namespace AkkaDotNet.Infrastructure.Configuration;
+﻿using AkkaDotNet.Infrastructure.Logging;
+
+namespace AkkaDotNet.Infrastructure.Configuration;
 
 public class StressOptions
 {
     public DistributedPubSubOptions DistributedPubSubOptions { get; set; }
     public ShardingOptions ShardingOptions { get; set; }
     public AkkaClusterOptions AkkaClusterOptions { get; set; }
+    
+    public SerilogOptions SerilogOptions { get; set; }
 }
 
 public class DistributedPubSubOptions
