@@ -25,7 +25,7 @@ public static class StressHostingExtensions
             akka{{
               management{{
                 http.port = {options.ManagementPort}
-                http.hostname = ""
+                http.hostname = """"
                 cluster.bootstrap {{
                     contact-point-discovery {{
                         discovery-method = akka.discovery

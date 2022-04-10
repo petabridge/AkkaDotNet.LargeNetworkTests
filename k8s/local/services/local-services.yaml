@@ -55,7 +55,7 @@ spec:
       terminationGracePeriodSeconds: 35
       containers:
       - name: frontend
-        image: akkadotnet.frontend:0.3.0
+        image: akkadotnet.frontend:0.3.1
         env:
         - name: POD_NAME
           valueFrom:
@@ -70,6 +70,7 @@ spec:
           tcpSocket:
             port: 9221 
         readinessProbe:
+          initialDelaySeconds: 20
           httpGet:
             path: "/ready"
             port: 80
@@ -120,7 +121,7 @@ spec:
       terminationGracePeriodSeconds: 35
       containers:
       - name: backend
-        image: akkadotnet.backend:0.3.0
+        image: akkadotnet.backend:0.3.1
         env:
         - name: POD_NAME
           valueFrom:
@@ -135,6 +136,7 @@ spec:
           tcpSocket:
             port: 9221 
         readinessProbe:
+          initialDelaySeconds: 20
           httpGet:
             path: "/ready"
             port: 80
