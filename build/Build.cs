@@ -40,6 +40,8 @@ partial class Build : NukeBuild
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = Configuration.Release;
+    
+    public const string DefaultNuGet = "https://api.nuget.org/v3/index.json";
 
     //usage:
     //.\build.cmd createnuget --NugetPrerelease {suffix}
@@ -47,7 +49,7 @@ partial class Build : NukeBuild
 
     [GitRepository] readonly GitRepository GitRepository;
 
-    [Parameter] string NugetPublishUrl = "https://api.nuget.org/v3/index.json";
+    [Parameter] string NugetPublishUrl = DefaultNuGet;
     [Parameter][Secret] string NugetKey;
 
     [Parameter] string SymbolsPublishUrl;
@@ -61,6 +63,8 @@ partial class Build : NukeBuild
 
     [Parameter][Secret] string DockerUsername;
     [Parameter][Secret] string DockerPassword;
+    
+    [Parameter][Secret] string CustomNuGetSource;
 
     // Directories
     AbsolutePath ToolsDir => RootDirectory / "tools";
@@ -107,8 +111,12 @@ partial class Build : NukeBuild
         .DependsOn(Clean)
         .Executes(() =>
         {
+            var sources = new List<string>(){DefaultNuGet };
+            if(CustomNuGetSource != null)
+                sources.Add(CustomNuGetSource);
+            
             DotNetRestore(s => s
-                .SetProjectFile(Solution));
+                .SetProjectFile(Solution).AddSources(sources));
         });
     Target CreateNuget => _ => _
       .Description("Creates nuget packages")

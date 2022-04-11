@@ -18,6 +18,10 @@
           "type": "boolean",
           "description": "Indicates to continue a previously failed build attempt"
         },
+        "CustomNuGetSource": {
+          "type": "string",
+          "default": "Secrets must be entered via 'nuke :secret [profile]'"
+        },
         "DockerPassword": {
           "type": "string",
           "default": "Secrets must be entered via 'nuke :secret [profile]'"
