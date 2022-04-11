@@ -58,7 +58,7 @@ public static class StressHostingExtensions
     /// </summary>
     public static Config SbrConfig => @"
             akka.cluster{
-	        downing-provider-class = ""Akka.Cluster.SBR.SplitBrainResolver, Akka.Cluster""
+	        downing-provider-class = ""Akka.Cluster.SBR.SplitBrainResolverProvider, Akka.Cluster""
             
             split-brain-resolver {
                 active-strategy = keep-majority
