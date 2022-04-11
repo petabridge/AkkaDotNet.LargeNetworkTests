@@ -72,9 +72,13 @@ spec:
             port: 80
         ports:
         - containerPort: 9228
+          name: management
+          protocol: TCP
         - containerPort: 9221
+          name: akka-remote
           protocol: TCP
         - containerPort: 80
+          name: http
           protocol: TCP
 ---
 apiVersion: v1
@@ -121,7 +125,7 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: StressOptions__AkkaClusterOptions__Hostname
-          value: "$(POD_NAME).backend"
+          value: "$(POD_NAME).backend-akka"
         envFrom:
         - configMapRef:
             name: stress-configs
@@ -131,7 +135,11 @@ spec:
             port: 80
         ports:
         - containerPort: 9228
+          name: management
+          protocol: TCP
         - containerPort: 9221
+          name: akka-remote
           protocol: TCP
         - containerPort: 80
+          name: http
           protocol: TCP
