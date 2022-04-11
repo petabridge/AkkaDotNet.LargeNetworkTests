@@ -1,9 +1,9 @@
 ﻿<Project>
   <PropertyGroup>
-    <Copyright>Copyright © 2019 Your Company</Copyright>
-    <Authors>Your Authors</Authors>
-    <VersionPrefix>0.3.0</VersionPrefix>
-    <PackageReleaseNotes>• First release</PackageReleaseNotes>
+    <Copyright>Copyright © 2022 Petabridge</Copyright>
+    <Authors>Petabridge</Authors>
+    <VersionPrefix>0.3.2</VersionPrefix>
+    <PackageReleaseNotes>• Fixing issues with /ready HTTP checks interferring with Akka.Cluster.Bootstrap</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
     <PackageProjectUrl>
@@ -22,7 +22,7 @@
     <TestSdkVersion>17.1.0</TestSdkVersion>
     <AkkaVersion>1.4.36</AkkaVersion>
     <PbmVersion>1.0.2</PbmVersion>
-    <AkkaHostingVersion>0.2.1</AkkaHostingVersion>
+    <AkkaHostingVersion>0.2.2</AkkaHostingVersion>
     <AkkaManagementVerison>0.2.4-beta1</AkkaManagementVerison>
     <FluentAssertionsVersion>6.6.0</FluentAssertionsVersion>
     <OTelVersion>1.2.0-rc4</OTelVersion>

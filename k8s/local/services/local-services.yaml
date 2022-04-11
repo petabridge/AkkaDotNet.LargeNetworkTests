@@ -7,7 +7,7 @@ metadata:
     prometheus.io/path: '/metrics'
     prometheus.io/port: '80'
   labels:
-    app: domain-customers
+    app: frontend
 spec:
   type: LoadBalancer
   ports:
@@ -42,7 +42,7 @@ metadata:
     app: frontend
     akkacluster: stress
 spec:
-  serviceName: "frontend"
+  serviceName: "frontend-akka"
   replicas: 3
   selector:
     matchLabels:
@@ -51,24 +51,21 @@ spec:
     metadata:
       labels:
         app: frontend
+        akkacluster: stress
     spec:
-      terminationGracePeriodSeconds: 35
       containers:
       - name: frontend
-        image: akkadotnet.frontend:0.3.0
+        image: akkadotnet.frontend:0.3.2
         env:
         - name: POD_NAME
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
-        - name:  StressOptions__AkkaClusterOptions__Hostname
+        - name: StressOptions__AkkaClusterOptions__Hostname
           value: "$(POD_NAME).frontend-akka"
         envFrom:
         - configMapRef:
             name: stress-configs
-        livenessProbe:
-          tcpSocket:
-            port: 9221 
         readinessProbe:
           httpGet:
             path: "/ready"
@@ -79,9 +76,6 @@ spec:
           protocol: TCP
         - containerPort: 80
           protocol: TCP
-
-
-
 ---
 apiVersion: v1
 kind: Service
@@ -107,7 +101,7 @@ metadata:
     app: backend
     akkacluster: stress
 spec:
-  serviceName: "backend"
+  serviceName: "backend-akka"
   replicas: 3
   selector:
     matchLabels:
@@ -116,24 +110,21 @@ spec:
     metadata:
       labels:
         app: backend
+        akkacluster: stress
     spec:
-      terminationGracePeriodSeconds: 35
       containers:
       - name: backend
-        image: akkadotnet.backend:0.3.0
+        image: akkadotnet.backend:0.3.2
         env:
         - name: POD_NAME
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
-        - name:  StressOptions__AkkaClusterOptions__Hostname
-          value: "$(POD_NAME).backend-akka"
+        - name: StressOptions__AkkaClusterOptions__Hostname
+          value: "$(POD_NAME).backend"
         envFrom:
         - configMapRef:
             name: stress-configs
-        livenessProbe:
-          tcpSocket:
-            port: 9221 
         readinessProbe:
           httpGet:
             path: "/ready"

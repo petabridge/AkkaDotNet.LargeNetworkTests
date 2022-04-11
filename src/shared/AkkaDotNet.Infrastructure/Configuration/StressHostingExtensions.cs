@@ -25,12 +25,11 @@ public static class StressHostingExtensions
             akka{{
               management{{
                 http.port = {options.ManagementPort}
-                http.hostname = ""
+                http.hostname = """"
                 cluster.bootstrap {{
                     contact-point-discovery {{
                         discovery-method = akka.discovery
-                        port-name = management
-                        required-contact-point-nr = 2
+                        required-contact-point-nr = 3
                         stable-margin = 5s
                         contact-with-all-contact-points = true
                     }}
@@ -58,10 +57,11 @@ public static class StressHostingExtensions
     /// </summary>
     public static Config SbrConfig => @"
             akka.cluster{
-	        downing-provider-class = ""Akka.Cluster.SplitBrainResolver, Akka.Cluster""
+	        downing-provider-class = ""Akka.Cluster.SBR.SplitBrainResolver, Akka.Cluster""
             
             split-brain-resolver {
                 active-strategy = keep-majority
+                down-all-when-unstable = off
             }
         }";
     
@@ -93,8 +93,8 @@ public static class StressHostingExtensions
 
         Debug.Assert(options.Port != null, "options.Port != null");
         builder = builder
-            .AddHocon(SbrConfig) // need to add SBR regardless of options
-            .WithRemoting("0.0.0.0", options.Port.Value, options.Hostname)
+            //.AddHocon(SbrConfig) // need to add SBR regardless of options
+            .WithRemoting(options.Hostname, options.Port.Value)
             .WithClustering(clusterOptions)
             .WithPetabridgeCmd(); // start PetabridgeCmd actors too
 

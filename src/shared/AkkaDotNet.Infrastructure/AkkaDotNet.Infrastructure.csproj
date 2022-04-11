@@ -9,16 +9,17 @@
     <ItemGroup>
         <PackageReference Include="Akka.Cluster.Hosting" Version="$(AkkaHostingVersion)" />
         <PackageReference Include="Akka.Discovery" Version="$(AkkaVersion)" />
+        <PackageReference Include="Akka.Discovery.KubernetesApi" Version="$(AkkaManagementVerison)" />
         <PackageReference Include="Akka.Logger.Serilog" Version="1.4.26" />
-        <PackageReference Include="Akka.Management.Cluster.Bootstrap" Version="0.2.4-beta1" />
+        <PackageReference Include="Akka.Management.Cluster.Bootstrap" Version="$(AkkaManagementVerison)" />
         <PackageReference Include="Petabridge.Cmd.Cluster" Version="$(PbmVersion)" />
         <PackageReference Include="Petabridge.Cmd.Cluster.Sharding" Version="$(PbmVersion)" />
         <PackageReference Include="Petabridge.Cmd.Remote" Version="$(PbmVersion)" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
         <PackageReference Include="Serilog.Sinks.Seq" Version="5.1.1" />
-        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="$(OTelInstrumentationVersion)"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="$(OTelInstrumentationVersion)"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="$(OTelInstrumentationVersion)"/>
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="$(OTelInstrumentationVersion)" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="$(OTelInstrumentationVersion)" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="$(OTelInstrumentationVersion)" />
         <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="$(OTelVersion)" />
         <PackageReference Include="OpenTelemetry.Exporter.Prometheus" Version="$(OTelVersion)" />
     </ItemGroup>
