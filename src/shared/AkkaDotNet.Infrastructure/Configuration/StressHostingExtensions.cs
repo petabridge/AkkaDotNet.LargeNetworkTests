@@ -11,6 +11,7 @@ using Petabridge.Cmd.Cluster;
 using Petabridge.Cmd.Cluster.Sharding;
 using Petabridge.Cmd.Host;
 using Petabridge.Cmd.Remote;
+using Phobos.Hosting;
 
 namespace AkkaDotNet.Infrastructure.Configuration;
 
@@ -97,6 +98,7 @@ public static class StressHostingExtensions
             .AddHocon(SbrConfig) // need to add SBR regardless of options
             .WithRemoting(options.Hostname, options.Port.Value)
             .WithClustering(clusterOptions)
+            .WithPhobos(AkkaRunMode.AkkaCluster)
             .WithPetabridgeCmd(); // start PetabridgeCmd actors too
 
         return builder;

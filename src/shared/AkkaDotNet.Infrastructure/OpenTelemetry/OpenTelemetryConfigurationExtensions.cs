@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Phobos.Actor;
 
 namespace AkkaDotNet.Infrastructure.OpenTelemetry;
 
@@ -36,7 +37,7 @@ public static class OpenTelemetryConfigurationExtensions
             builder
                 .SetResourceBuilder(ResourceBuilder.CreateDefault()
                     .AddService(Assembly.GetEntryAssembly()!.GetName().Name, serviceInstanceId: $"{Dns.GetHostName()}"))
-                //.AddPhobosInstrumentation()
+                .AddPhobosInstrumentation()
                 .AddHttpClientInstrumentation()
                 .AddAspNetCoreInstrumentation()
                 .AddPrometheusExporter(opt =>
