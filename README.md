@@ -1,168 +1,108 @@
-﻿# Petabridge.App.Web
+﻿# AkkaDotNet.LargeNetworkTests
 
-Update this readme file with your details.
+This is a configurable Akka.NET application designed to test various dispatcher, heartbeat, and network settings inside large clusters (50-200 nodes) in a production Kubernetes environment.
 
-# The Build System
+## Build and Local Deployment
+Start by cloning this repository to your local system.
 
-This build system is powered by [NUKE](https://nuke.build/); please see their [API documentation](https://nuke.build/docs/getting-started/philosophy.html) should you need to make any changes to the `Build.cs` file.
+Next - to build this solution you will need to [purchase a Phobos license key](https://phobos.petabridge.com/articles/setup/request.html). They cost $4,000 per year per organization with no node count or seat limitations and comes with a 30 day money-back guarantee.
 
-To install Nuke GlobalTool and SignClient, execute the following command at the root of this folder:
+Once you purchase a [Phobos NuGet keys for your organization](https://phobos.petabridge.com/articles/setup/index.html), you're going to want to open [`NuGet.config`](NuGet.config) and add your key:
 
 ```
-build.cmd
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <solution>
+    <add key="disableSourceControlIntegration" value="true" />
+  </solution>
+  <packageSources>
+    <clear />
+    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+    <add key="phobos" value="{your key here}" />
+  </packageSources>
+</configuration>
 ```
 
-## GitHub Actions `yml` auto-generation
+From there, run the following commad on the prompt:
 
-You can define your GitHub workflows in code and Nuke will generate the YAML files for you.
-
-You can update or add to what exist in `Build.CI.GitHubActions.cs` (`AutoGenerate` has to be set to true):
-
-```csharp
-[CustomGitHubActions("pr_validation",
-    GitHubActionsImage.WindowsLatest,
-    GitHubActionsImage.UbuntuLatest,
-    AutoGenerate = true,
-    OnPushBranches = new[] { "master", "dev" },
-    OnPullRequestBranches = new[] { "master", "dev" },
-    InvokedTargets = new[] { nameof(RunTests) },
-    PublishArtifacts = true,
-    EnableGitHubContext = true)
-]
-
-[CustomGitHubActions("Docker_build",
-    GitHubActionsImage.UbuntuLatest,
-    AutoGenerate = true,
-    OnPushBranches = new[] { "master", "dev" },
-    OnPullRequestBranches = new[] { "master", "dev" },
-    InvokedTargets = new[] { nameof(Docker) },
-    ImportSecrets = new [] { "Docker_Username", "Docker_Password" },
-    PublishArtifacts = true,
-    EnableGitHubContext = true)
-]
-[CustomGitHubActions("Windows_release",
-    GitHubActionsImage.WindowsLatest,
-    AutoGenerate = true,
-    OnPushBranches = new[] { "refs/tags/*" },
-    InvokedTargets = new[] { nameof(Nuget) },
-    ImportSecrets = new[] { "Nuget_Key" }, 
-    PublishArtifacts = true,
-    EnableGitHubContext = true)
-]
 ```
-To generate or update existing workflow yaml file(s), execute any of the commands (e.g. `build.cmd compile`):
+PS> build.cmd Docker
+```
+
+This will create the Docker images the solution needs to run inside Kubernetes:
+
+* `akkadotnet.backend`
+* `akkadotnet.frontend`
+
+### Local Deployment
+
+To deploy this solution into a local Kubernetes cluster:
 
 ```shell
-PS C:\Users\User\source\repos\Petabridge.App.Web> .\build.cmd compile
-PowerShell Desktop version 5.1.19041.1320
-Microsoft (R) .NET Core SDK version 6.0.101
-11:42:25 [INF] Creating directory C:\Users\User\source\repos\Petabridge.App.Web\.github\workflows...
-11:42:25 [INF] Creating directory C:\Users\User\source\repos\Petabridge.App.Web\.github\workflows...
-11:42:25 [INF] Creating directory C:\Users\User\source\repos\Petabridge.App.Web\.github\workflows...
-11:42:28 [WRN] Configuration files for GitHubActions (Windows_release) have changed.
-11:42:28 [WRN] Configuration files for GitHubActions (pr_validation) have changed.
-11:42:28 [WRN] Configuration files for GitHubActions (Docker_build) have changed.
-Press any key to continue ...​
-
-███╗   ██╗██╗   ██╗██╗  ██╗███████╗
-████╗  ██║██║   ██║██║ ██╔╝██╔════╝
-██╔██╗ ██║██║   ██║█████╔╝ █████╗  
-██║╚██╗██║██║   ██║██╔═██╗ ██╔══╝  
-██║ ╚████║╚██████╔╝██║  ██╗███████╗
-╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝
+PS> ./k8s/local/deployAll.cmd
 ```
 
-## Supported Build System Commands
-
-This project comes with some ready-made commands, all of which can be listed via:
+This will deploy the following services and deployments into the `akkastress` namespace:
 
 ```
- build.cmd help
-```
-If you desire to add more commands, please see the [Fundamentals](https://nuke.build/docs/authoring-builds/fundamentals.html).
+λ  kubectl -n akkastress get all
+NAME                                         READY   STATUS    RESTARTS   AGE
+pod/backend-0                                1/1     Running   0          10m
+pod/backend-1                                1/1     Running   0          9m41s
+pod/backend-2                                1/1     Running   0          9m20s
+pod/frontend-0                               1/1     Running   0          10m
+pod/frontend-1                               1/1     Running   0          9m41s
+pod/frontend-2                               1/1     Running   0          9m18s
+pod/grafana-648b8f56c7-c5bb6                 1/1     Running   0          10m
+pod/jaeger-6d6c8558f-9rhst                   1/1     Running   0          10m
+pod/prometheus-deployment-6b74f44ff4-nvncd   1/1     Running   0          10m
+pod/seq-6494b7f6cc-cgvfm                     1/1     Running   0          10m
 
-### Summary
+NAME                            TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                               AGE
+service/backend-akka            ClusterIP      None             <none>        9228/TCP,9221/TCP                     10m
+service/frontend-akka           ClusterIP      None             <none>        9228/TCP,9221/TCP                     10m
+service/frontend-web            LoadBalancer   10.97.130.114    localhost     1880:31388/TCP                        10m
+service/grafana-ip-service      LoadBalancer   10.105.167.59    localhost     3000:30982/TCP                        10m
+service/jaeger-agent            ClusterIP      None             <none>        5775/UDP,6831/UDP,6832/UDP,5778/TCP   10m
+service/jaeger-collector        ClusterIP      10.101.135.216   <none>        14267/TCP,14268/TCP,9411/TCP          10m
+service/jaeger-query            LoadBalancer   10.107.162.113   localhost     16686:32493/TCP                       10m
+service/prometheus-ip-service   LoadBalancer   10.107.198.85    localhost     9090:30901/TCP                        10m
+service/seq                     LoadBalancer   10.107.222.212   localhost     8988:30204/TCP                        10m
+service/zipkin                  ClusterIP      None             <none>        9411/TCP                              10m
 
-The ready-made commands you can start working with (both on **Windows** and **Linux**), are detailed as follows:
+NAME                                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/grafana                 1/1     1            1           10m
+deployment.apps/jaeger                  1/1     1            1           10m
+deployment.apps/prometheus-deployment   1/1     1            1           10m
+deployment.apps/seq                     1/1     1            1           10m
 
-* `build.cmd Install` - installs Nuke.GlobalTool - which is the default when no command is passed.
-* `build.cmd all` - runs the following commands: `BuildRelease`, `RunTests`, `NBench` and `Nuget`.
-* `build.cmd compile` - compiles the solution in `Release` mode. The default mode is `Release`, to compile in `Debug` mode => `--configuration debug`
-* `build.cmd buildrelease` - compiles the solution in `Release` mode.
-* `build.cmd runtests` - compiles the solution in `Release` mode and runs the unit test suite (all projects that end with the `.Tests.csproj` suffix). All of the output will be published to the `./TestResults` folder.
-* `build.cmd nbench` - compiles the solution in `Release` mode and runs the [NBench](https://nbench.io/) performance test suite (all projects that end with the `.Tests.Performance.csproj` suffix). All of the output will be published to the `./PerfResults` folder.
-* `build.cmd nuget` - compiles the solution in `Release` mode and creates Nuget packages from any project that does not have `<IsPackable>false</IsPackable>` set and uses the version number from `RELEASE_NOTES.md`.
-* `build.cmd nuget --nugetprerelease dev` - compiles the solution in `Release` mode and creates Nuget packages from any project that does not have `<IsPackable>false</IsPackable>` set - but in this instance all projects will have a `VersionSuffix` of `-beta{DateTime.UtcNow.Ticks}`. It's typically used for publishing nightly releases.
-* `build.cmd nuget --nugetpublishurl $(nugetUrl) --nugetkey $(nugetKey)` - compiles the solution in `Release` modem creates Nuget packages from any project that does not have `<IsPackable>false</IsPackable>` set using the version number from `RELEASE_NOTES.md` then publishes those packages to the `$(nugetUrl)` using NuGet key `$(nugetKey)`.
-* `build.cmd DocFx` - compiles the solution in `Release` mode and then uses [DocFx](http://dotnet.github.io/docfx/) to generate website documentation inside the `./docs/_site` folder. Use the `build.cmd servedocs` on Windows to preview the documentation.
+NAME                                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/grafana-648b8f56c7                 1         1         1       10m
+replicaset.apps/jaeger-6d6c8558f                   1         1         1       10m
+replicaset.apps/prometheus-deployment-6b74f44ff4   1         1         1       10m
+replicaset.apps/seq-6494b7f6cc                     1         1         1       10m
 
-This build script is powered by [NUKE](https://nuke.build/); please see their API documentation should you need to make any changes to the [`build.cs`](/build/build.cs) file.
-
-### Release Notes, Version Numbers, Etc
-This project will automatically populate its release notes in all of its modules via the entries written inside [`RELEASE_NOTES.md`](RELEASE_NOTES.md) and will automatically update the versions of all assemblies and NuGet packages via the metadata included inside [`Directory.Build.props`](src/Directory.Build.props).
-
-**RELEASE_NOTES.md**
-```
-#### [0.1.0] / October 05 2019 ####
-First release
-```
-
-In this instance, the NuGet and assembly version will be `0.1.0` based on what's available at the top of the `RELEASE_NOTES.md` file.
-
-**RELEASE_NOTES.md**
-```
-#### [0.1.0] / October 05 2019 ####
-First release
-```
-But in this case the NuGet and assembly version will be `0.1.0`.
-
-### Deployment
-Petabridge.App.Web uses Docker for deployment - to create Docker images for this project, please run the following command:
-
-```
-build.cmd Docker
+NAME                        READY   AGE
+statefulset.apps/backend    3/3     10m
+statefulset.apps/frontend   3/3     10m
 ```
 
-By default `Docker` will look for every `.csproj` file that has a `Dockerfile` in the same directory - from there the name of the `.csproj` will be converted into [the supported Docker image name format](https://docs.docker.com/engine/reference/commandline/tag/#extended-description), so "Petabridge.App.Web.csproj" will be converted to an image called `petabridge.app.web:latest` and `petabridge.app.web:{VERSION}`, where version is determined using the rules defined in the section below.
+Once the cluster is fully up and running you can explore the application and its associated telemetry via the following Urls:
 
-#### Pushing to a Remote Docker Registry
-You can also specify a remote Docker registry URL and that will cause a copy of this Docker image to be published there as well:
+* [http://localhost:1880](http://localhost:1880) - generates traffic across the Akka.NET cluster inside the `phobos-web` service.
+* [http://localhost:16686/](http://localhost:16686/) - Jaeger tracing UI. Allows to explore the traces that are distributed across the different nodes in the cluster.
+* [http://localhost:9090/](http://localhost:9090/) - Prometheus query UI.
+* [http://localhost:3000/](http://localhost:3000/) - Grafana metrics. Log in using the username **admin** and the password **admin**. It includes some ready-made dashboards you can use to explore Phobos + OpenTelemetry metrics:
+    - [Akka.NET Cluster Metrics](http://localhost:3000/d/8Y4JcEfGk/akka-net-cluster-metrics?orgId=1&refresh=10s) - this is a pre-installed version of our [Akka.NET Cluster + Phobos Metrics (Prometheus Data Source) Dashboard](https://grafana.com/grafana/dashboards/13775) on Grafana Cloud, which you can install instantly into your own applications!
+* [http://localhost:8988/](http://localhost:8988/) - Seq log aggregation.
 
-### Conventions
-The attached build script will automatically do the following based on the conventions of the project names added to this project:
+There's many more metrics exported by Phobos that you can use to create your own dashboards or extend the existing ones - you can view all of them by going to [http://localhost:1880/metrics](http://localhost:1880/metrics)
 
-* Any project name ending with `.Tests` will automatically be treated as a [XUnit2](https://xunit.github.io/) project and will be included during the test stages of this build script;
-* Any project name ending with `.Tests.Performance` will automatically be treated as a [NBench](https://github.com/petabridge/NBench) project and will be included during the test stages of this build script; and
-* Any project meeting neither of these conventions will be treated as a NuGet packaging target and its `.nupkg` file will automatically be placed in the `bin\nuget` folder upon running the `build.cmd all` command.
-
-### DocFx for Documentation
-This solution also supports [DocFx](http://dotnet.github.io/docfx/) for generating both API documentation and articles to describe the behavior, output, and usages of your project. 
-
-All of the relevant articles you wish to write should be added to the `/docs/articles/` folder and any API documentation you might need will also appear there.
-
-All of the documentation will be statically generated and the output will be placed in the `/docs/_site/` folder. 
-
-#### Previewing Documentation
-To preview the documentation for this project, execute the following command at the root of this folder:
+### Tearing Down the Cluster
+When you're done exploring this sample, you can tear down the cluster by running the following command:
 
 ```
-build.cmd servedocs
+PS> ./k8s/destroyAll.cmd
 ```
 
-This will use the built-in `docfx.console` binary that is installed as part of the NuGet restore process from executing the above command to preview the fully-rendered documentation. For best results, do this immediately after calling `build.cmd compile`.
-
-### Code Signing via SignService
-This project uses [SignService](https://github.com/onovotny/SignService) to code-sign NuGet packages prior to publication. The `build.cmd` scripts will automatically download the `SignClient` needed to execute code signing locally on the build agent, but it's still your responsibility to set up the SignService server per the instructions at the linked repository.
-
-Once you've gone through the ropes of setting up a code-signing server, you'll need to set a few configuration options in your project in order to use the `SignClient`:
-
-* Add your Active Directory settings to [`appsettings.json`](appsettings.json) and
-* Pass in your signature information to the `SigningName`, `SigningDescription`, and `SigningUrl` values inside `build.cs`.
-
-Whenever you're ready to run code-signing on the NuGet packages published by `build.cs`, execute the following command:
-
-```
-build.cmd signpackages --SignClientSecret {your secret} --SignClientUser {your username}
-```
-
-This will invoke the `SignClient` and actually execute code signing against your `.nupkg` files prior to NuGet publication.
+This will delete the `phobos-web` namespace and all of the resources inside it.
