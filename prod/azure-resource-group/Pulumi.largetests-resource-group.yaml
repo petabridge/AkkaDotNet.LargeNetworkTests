@@ -1,0 +1,3 @@
+config:
+  akkadotnet-largescale-tests:resourceGroupName: akkalargescale
+  azure-native:location: South Central US
