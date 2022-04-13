@@ -22,7 +22,7 @@
         <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="$(OTelInstrumentationVersion)" />
         <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="$(OTelVersion)" />
         <PackageReference Include="OpenTelemetry.Exporter.Prometheus" Version="$(OTelVersion)" />
-        <PackageReference Include="Phobos.Hosting" Version="2.0.0"/>
+        <PackageReference Include="Phobos.Hosting" Version="2.0.1"/>
     </ItemGroup>
 
 </Project>
