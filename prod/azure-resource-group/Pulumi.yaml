@@ -1,0 +1,3 @@
+name: akkadotnet-largescale-tests
+runtime: dotnet
+description: Akka.NET large scale testing on Kubernetes
