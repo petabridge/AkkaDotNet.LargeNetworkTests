@@ -1,4 +1,6 @@
 config:
   azure-native:location: South Central US
-  largescale-aks:aks.NodeCount: 1
+  largescale-aks:aks.NodeCount: "1"
   largescale-aks:aks.VmSku: Standard_D2_v2
+  largescale-aks:aks.autoScale: "false"
+  largescale-aks:environment: Development
