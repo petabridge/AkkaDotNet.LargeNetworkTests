@@ -19,4 +19,4 @@ data:
   # configure Serilog
   StressOptions__SerilogOptions__EnableSeq: "true"
   StressOptions__SerilogOptions__SeqHost: "seq-chart.monitoring.svc.cluster.local"
-  StressOptions__SerilogOptions__SeqPort: "5431"
+  StressOptions__SerilogOptions__SeqPort: "80"
