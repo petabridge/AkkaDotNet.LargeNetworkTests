@@ -52,12 +52,12 @@ class MyStack : Stack
         };
 
         
-        DeployPrometheusAndGrafana(monitoringResourceOptions);
-        DeploySeq(monitoringResourceOptions, seqDiskSize);
+        DeployPrometheusAndGrafana(monitoringResourceOptions, ns);
+        DeploySeq(monitoringResourceOptions, seqDiskSize, ns);
 
     }
 
-    private void DeploySeq(CustomResourceOptions options, int seqDiskSize)
+    private void DeploySeq(CustomResourceOptions options, int seqDiskSize, Namespace ns)
     {
         // 2022.1.7378
         
@@ -91,13 +91,14 @@ class MyStack : Stack
             Chart = "seq",
             Repo = "datalust",
             Version = "2022.1.7378",
+            Namespace = ns.Metadata.Apply(c => c.Name)
         }, new ComponentResourceOptions()
         {
             Provider = options.Provider,
         });
     }
 
-    private void DeployPrometheusAndGrafana(CustomResourceOptions options)
+    private void DeployPrometheusAndGrafana(CustomResourceOptions options, Namespace ns)
     {
             /*
              * Enable Prometheus data storage on a persistent volume claim
@@ -149,6 +150,7 @@ class MyStack : Stack
                 Version = "15.8.1",
                 Repo = "prometheus-community",
                 Values = prometheusChartValues,
+                Namespace = ns.Metadata.Apply(c => c.Name)
             }, new ComponentResourceOptions()
             {
                 Provider = options.Provider,
@@ -228,7 +230,7 @@ class MyStack : Stack
                 Version = "7.6.28",
                 Repo = "bitnami",
                 Values = grafanaChartValues,
-                
+                Namespace = ns.Metadata.Apply(c => c.Name)
             }, new ComponentResourceOptions()
             {
                 Provider = options.Provider,
