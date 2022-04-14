@@ -4,6 +4,7 @@ using Pulumi;
 using Pulumi.AzureAD;
 using Pulumi.AzureNative.ContainerService;
 using Pulumi.AzureNative.ContainerService.Inputs;
+using Pulumi.AzureNative.Authorization;
 using Pulumi.Random;
 using Pulumi.Tls;
 
@@ -102,7 +103,16 @@ class MyStack : Stack
                 { "environment", environmentTag }
             }
         });
-
+        
+        // need to assign ACR Pull permissions to AKS service principal
+        var acrAssignment = new RoleAssignment("aks-acr-pull", new RoleAssignmentArgs()
+        {
+            PrincipalId = adSp.Id,
+            Scope = acrInstanceId,
+            RoleDefinitionId = "/subscriptions/0282681f-7a9e-424b-80b2-96babd57a8a1/providers/Microsoft.Authorization/roleDefinitions/7f951dda-4ed3-4680-a7ca-43fe172d538d",
+            RoleAssignmentName = "7f95abcd-4ed3-4680-a7ca-43fe172d538d",
+        });
+        
         // Export the KubeConfig
         KubeConfig = GetKubeConfig(rgName, cluster.Name);
     }
