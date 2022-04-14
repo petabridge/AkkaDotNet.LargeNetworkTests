@@ -11,4 +11,11 @@
     <PackageReference Include="Pulumi.Kubernetes" Version="3.*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Grafana\datasource-providers.yml" />
+    <Content Include="Grafana\datasource-providers.yml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

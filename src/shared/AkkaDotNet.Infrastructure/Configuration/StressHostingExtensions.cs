@@ -98,7 +98,13 @@ public static class StressHostingExtensions
             .AddHocon(SbrConfig) // need to add SBR regardless of options
             .WithRemoting(options.Hostname, options.Port.Value)
             .WithClustering(clusterOptions)
-            .WithPhobos(AkkaRunMode.AkkaCluster)
+            .WithPhobos(AkkaRunMode.AkkaCluster, configBuilder =>
+            {
+                configBuilder.WithTracing(tracingConfigBuilder =>
+                {
+                    tracingConfigBuilder.SetTraceUserActors(false).SetTraceSystemActors(false);
+                });
+            })
             .WithPetabridgeCmd(); // start PetabridgeCmd actors too
 
         return builder;
