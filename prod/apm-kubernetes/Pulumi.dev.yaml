@@ -1,4 +1,4 @@
 config:
   largescale-apm:apmNamespace: monitoring
   largescale-apm:requiredStack: dev
-  largescale-apm:seqDiskSize: "30"
+  largescale-apm:seqDiskSize: "500"
