@@ -39,13 +39,25 @@ class MyStack : Stack
             Kind = "Namespace"
         }, customResourceOptions);
         
+        var monitoringProvider = new Pulumi.Kubernetes.Provider("k8s-monitoring-provider", new ProviderArgs()
+        {
+            KubeConfig = aksStack.RequireOutput("kubeconfig").Apply(c => c.ToString())!,
+            Namespace = ns.Metadata.Apply(c => c.Name)
+        });
         
-        DeployPrometheusAndGrafana(customResourceOptions, ns);
-        DeploySeq(customResourceOptions, seqDiskSize, ns);
+        // forces all resources to be created inside the same namespace
+        var monitoringResourceOptions = new CustomResourceOptions()
+        {
+            Provider = monitoringProvider
+        };
+
+        
+        DeployPrometheusAndGrafana(monitoringResourceOptions);
+        DeploySeq(monitoringResourceOptions, seqDiskSize);
 
     }
 
-    private void DeploySeq(CustomResourceOptions options, int seqDiskSize, Namespace apmNamespace)
+    private void DeploySeq(CustomResourceOptions options, int seqDiskSize)
     {
         // 2022.1.7378
         
@@ -79,14 +91,13 @@ class MyStack : Stack
             Chart = "seq",
             Repo = "datalust",
             Version = "2022.1.7378",
-            Namespace = apmNamespace.Metadata.Apply(c => c.Name),
         }, new ComponentResourceOptions()
         {
             Provider = options.Provider,
         });
     }
 
-    private void DeployPrometheusAndGrafana(CustomResourceOptions options, Namespace apmNamespace)
+    private void DeployPrometheusAndGrafana(CustomResourceOptions options)
     {
             /*
              * Enable Prometheus data storage on a persistent volume claim
@@ -136,7 +147,6 @@ class MyStack : Stack
             {
                 Chart = "prometheus",
                 Version = "15.8.1",
-                Namespace = apmNamespace.Metadata.Apply(c => c.Name),
                 Repo = "prometheus-community",
                 Values = prometheusChartValues,
             }, new ComponentResourceOptions()
@@ -160,21 +170,21 @@ class MyStack : Stack
                 {
                     ["enabled"] = true,
                 },
-                ["dashboardsConfigMaps"] = new List<object>
-                {
-                    new {
-                        configMapName = "grafana-dash-k8s",
-                        fileName = "k8s-dashboard.json"
-                    },
-                    new {
-                        configMapName = "grafana-dash-akkadotnet",
-                        fileName = "akkadotnet-dashboard.json"
-                    },
-                    new {
-                        configMapName = "grafana-dash-aspnet",
-                        fileName = "aspnetcore-dashboard.json"
-                    }
-                },
+                // ["dashboardsConfigMaps"] = new List<object>
+                // {
+                //     new {
+                //         configMapName = "grafana-dash-k8s",
+                //         fileName = "k8s-dashboard.json"
+                //     },
+                //     new {
+                //         configMapName = "grafana-dash-akkadotnet",
+                //         fileName = "akkadotnet-dashboard.json"
+                //     },
+                //     new {
+                //         configMapName = "grafana-dash-aspnet",
+                //         fileName = "aspnetcore-dashboard.json"
+                //     }
+                // },
                 ["datasources"] = new Dictionary<string, object>()
                 {
                     ["secretName"] = "grafana-prometheus-datasource"
@@ -216,7 +226,6 @@ class MyStack : Stack
             {
                 Chart = "grafana",
                 Version = "7.6.28",
-                Namespace = "monitoring",
                 Repo = "bitnami",
                 Values = grafanaChartValues,
                 
