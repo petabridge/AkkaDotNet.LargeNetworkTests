@@ -193,7 +193,7 @@ class MyStack : Stack
                 }, // need this or Grafana will hang during an update due to volume mount contention
                 ["admin"] = new Dictionary<string, object>
                 {
-                    ["password"] = "password" // Grafana is protected by CloudFlare Access.
+                    ["password"] = "akkastress" // Grafana is protected by CloudFlare Access.
                 },
                 ["testFramework"] = new Dictionary<string, object>
                 {
@@ -217,7 +217,7 @@ class MyStack : Stack
                 Chart = "grafana",
                 Version = "7.6.28",
                 Namespace = "monitoring",
-                Repo = "bitnami"
+                Repo = "bitnami",
                 Values = grafanaChartValues,
                 
             }, new ComponentResourceOptions()

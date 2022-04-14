@@ -12,9 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Grafana\datasourcce-providers.yml" />
-    <Content Include="Grafana\datasourcce-providers.yml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Remove="Grafana\datasource-providers.yml" />
+    <Content Include="Grafana\datasource-providers.yml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
