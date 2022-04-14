@@ -179,7 +179,7 @@ partial class Build : NukeBuild
                 if (!string.IsNullOrWhiteSpace(DockerRegistryUrl))
                 {
                     tags.Add($"{DockerRegistryUrl}/{image}:latest");
-                    tags.Add($"{DockerRegistryUrl}/{tagVersion}");
+                    tags.Add($"{DockerRegistryUrl}/{image}:{tagVersion}");
                 }
                 var settings = new DockerBuildSettings()
                  .SetFile(dockfile)
@@ -190,7 +190,7 @@ partial class Build : NukeBuild
         });
     Target PushImage => _ => _
         .Description("Push image to docker registry")
-        .DependsOn(DockerLogin)
+        //.DependsOn(DockerLogin)
         .Executes(() =>
         {
             var version = ReleaseNotes.Version;
@@ -208,7 +208,7 @@ partial class Build : NukeBuild
     public Target Docker => _ => _
     .DependsOn(BuildDockerImages);
     public Target PublishDockerImages => _ => _
-    .DependsOn(DockerLogin, Docker, PushImage);
+    .DependsOn(Docker, PushImage);
 
 
     Target PublishNuget => _ => _
