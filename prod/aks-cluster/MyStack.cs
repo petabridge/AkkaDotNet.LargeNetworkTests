@@ -22,6 +22,7 @@ class MyStack : Stack
         var aksSku = config.Require("aks.VmSku");
         var aksNodeCount = config.RequireInt32("aks.NodeCount");
         var environmentTag = config.Require("environment");
+        var aksDiskSize = config.RequireInt32("diskSize");
 
         // Create the AD service principal for the K8s cluster.
         var adApp = new Application("aks", new ApplicationArgs
@@ -69,7 +70,7 @@ class MyStack : Stack
                     MaxPods = 200,
                     Mode = "System",
                     Name = "agentpool",
-                    OsDiskSizeGB = 100,
+                    OsDiskSizeGB = aksDiskSize,
                     OsType = "Linux",
                     Type = "VirtualMachineScaleSets",
                     VmSize = aksSku,

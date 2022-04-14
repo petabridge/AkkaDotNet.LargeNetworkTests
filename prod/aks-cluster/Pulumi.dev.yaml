@@ -3,4 +3,5 @@ config:
   largescale-aks:aks.NodeCount: "1"
   largescale-aks:aks.VmSku: Standard_D2_v2
   largescale-aks:aks.autoScale: "false"
+  largescale-aks:diskSize: "100"
   largescale-aks:environment: Development
