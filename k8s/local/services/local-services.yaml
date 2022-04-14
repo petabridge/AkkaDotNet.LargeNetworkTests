@@ -136,6 +136,11 @@ spec:
         app: backend
         akkacluster: stress
     spec:
+      volumes:
+      - name: diagvol
+        emptyDir: {}
+      - name: dumpsvol
+        emptyDir: {}
       containers:
       - name: backend
         image: akkadotnet.backend:0.3.2
@@ -186,7 +191,9 @@ spec:
         # ALWAYS use the HTTPS form of the URL for deployments in production; the removal of HTTPS is done for
         # demonstration purposes only in this example. Please continue reading after this example for further details.
         - name: DOTNETMONITOR_Urls
-          value: http://localhost:52323
+          value: http://*:52323
+        ports:
+          - containerPort: 52323
         volumeMounts:
         - mountPath: /diag
           name: diagvol
@@ -199,8 +206,3 @@ spec:
           limits:
             cpu: 250m
             memory: 256Mi
-    volumes:
-    - mountPath: /diag
-      name: diagvol
-    - mountPath: /dumps
-      name: dumpsvol
