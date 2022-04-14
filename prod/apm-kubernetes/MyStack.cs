@@ -16,7 +16,7 @@ class MyStack : Stack
         
         var provider = new Pulumi.Kubernetes.Provider("k8s-provider", new ProviderArgs()
         {
-            KubeConfig = aksStack.RequireOutput("KubeConfig").Apply(c => c.ToString())!
+            KubeConfig = aksStack.RequireOutput("kubeconfig").Apply(c => c.ToString())!
         });
 
         var customResourceOptions = new CustomResourceOptions()
@@ -29,7 +29,7 @@ class MyStack : Stack
 
     }
 
-    private void DeploySeq(CustomResourceOptions options, int seqDiskSize)
+    private void DeploySeq(CustomResourceOptions options, int seqDiskSize, string apmNamespace)
     {
         // 2022.1.7378
         
@@ -57,9 +57,9 @@ class MyStack : Stack
         {
             Values = seqChartValues,
             Chart = "seq",
-            Repo = "https://github.com/datalust/helm.datalust.co",
+            Repo = "datalust",
             Version = "2022.1.7378",
-            Namespace = "monitoring",
+            Namespace = apmNamespace,
         }, new ComponentResourceOptions()
         {
             Provider = options.Provider,
@@ -102,7 +102,7 @@ class MyStack : Stack
 
             var prometheusOperatorChart = new Chart("pm", new Pulumi.Kubernetes.Helm.ChartArgs
             {
-                Chart = "prometheus-community",
+                Chart = "kube-prometheus-stack",
                 Version = "34.10.0",
                 Namespace = apmNamespace,
                 Repo = "prometheus-community",
