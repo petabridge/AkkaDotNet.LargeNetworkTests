@@ -111,13 +111,25 @@ class MyStack : Stack
                 ["kubeProxy"] = new Dictionary<string, object>
                 {
                     ["enabled"] = false
-                }
+                },
+                ["alertManager"] = new Dictionary<string, object>()
+                {
+                    ["enabled"] = false
+                },
+                ["configMapReload"] = new Dictionary<string, object>
+                {
+                    ["enabled"] = false
+                },
+                ["pushgateway"] = new Dictionary<string, object>
+                {
+                    ["enabled"] = false
+                },
             };
 
             var prometheusOperatorChart = new Chart("pm", new Pulumi.Kubernetes.Helm.ChartArgs
             {
-                Chart = "kube-prometheus-stack",
-                Version = "34.10.0",
+                Chart = "prometheus",
+                Version = "15.8.1",
                 Namespace = apmNamespace.Metadata.Apply(c => c.Name),
                 Repo = "prometheus-community",
                 Values = prometheusChartValues,
