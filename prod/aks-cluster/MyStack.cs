@@ -59,10 +59,6 @@ class MyStack : Stack
         var cluster = new ManagedCluster("akkastress", new ManagedClusterArgs()
         {
             ResourceGroupName = rgName,
-            AddonProfiles =
-            {
-                { "KubeDashboard", new ManagedClusterAddonProfileArgs { Enabled = true } }
-            },
             AgentPoolProfiles =
             {
                 new ManagedClusterAgentPoolProfileArgs
