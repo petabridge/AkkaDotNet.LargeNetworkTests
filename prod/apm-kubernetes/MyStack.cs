@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using Pulumi;
 using Pulumi.Kubernetes;
+using Pulumi.Kubernetes.Core.V1;
 using Pulumi.Kubernetes.Helm.V3;
+using Pulumi.Kubernetes.Types.Inputs.Core.V1;
+using Pulumi.Kubernetes.Types.Inputs.Meta.V1;
 
 class MyStack : Stack
 {
@@ -23,13 +26,24 @@ class MyStack : Stack
         {
             Provider = provider
         };
+
+        var ns = new Pulumi.Kubernetes.Core.V1.Namespace("monitoring-k8s-namespace", new NamespaceArgs()
+        {
+            Metadata = new ObjectMetaArgs
+            {
+                Name = apmNamespace
+            },
+            ApiVersion = "v1",
+            Kind = "Namespace"
+        }, customResourceOptions);
         
-        DeployPrometheusAndGrafana(customResourceOptions, apmNamespace);
-        DeploySeq(customResourceOptions, seqDiskSize);
+        
+        DeployPrometheusAndGrafana(customResourceOptions, ns);
+        DeploySeq(customResourceOptions, seqDiskSize, ns);
 
     }
 
-    private void DeploySeq(CustomResourceOptions options, int seqDiskSize, string apmNamespace)
+    private void DeploySeq(CustomResourceOptions options, int seqDiskSize, Namespace apmNamespace)
     {
         // 2022.1.7378
         
@@ -59,14 +73,14 @@ class MyStack : Stack
             Chart = "seq",
             Repo = "datalust",
             Version = "2022.1.7378",
-            Namespace = apmNamespace,
+            Namespace = apmNamespace.Metadata.Apply(c => c.Name),
         }, new ComponentResourceOptions()
         {
             Provider = options.Provider,
         });
     }
 
-    private void DeployPrometheusAndGrafana(CustomResourceOptions options, string apmNamespace)
+    private void DeployPrometheusAndGrafana(CustomResourceOptions options, Namespace apmNamespace)
     {
             /*
              * Enable Prometheus data storage on a persistent volume claim
@@ -104,7 +118,7 @@ class MyStack : Stack
             {
                 Chart = "kube-prometheus-stack",
                 Version = "34.10.0",
-                Namespace = apmNamespace,
+                Namespace = apmNamespace.Metadata.Apply(c => c.Name),
                 Repo = "prometheus-community",
                 Values = prometheusChartValues,
             }, new ComponentResourceOptions()
