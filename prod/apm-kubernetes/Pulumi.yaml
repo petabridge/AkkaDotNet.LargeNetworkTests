@@ -1,0 +1,3 @@
+name: largescale-apm
+runtime: dotnet
+description: APM instrumentation for Akka.NET large-scale testing.

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using System.Linq;
 using Pulumi;
 using Pulumi.AzureNative.ContainerRegistry;
 using Pulumi.AzureNative.Resources;
@@ -32,11 +33,22 @@ class MyStack : Stack
         // create an Azure Container Registry
         var registry = new Registry($"{rgName}images".ToLowerInvariant(), new RegistryArgs
         {
+            AdminUserEnabled = true,
             ResourceGroupName = resourceGroup.Name, Sku = new Pulumi.AzureNative.ContainerRegistry.Inputs.SkuArgs
             {
                 Name = "Standard"
             }
         });
+        
+        var credentials = ListRegistryCredentials.Invoke(new ListRegistryCredentialsInvokeArgs
+        {
+            ResourceGroupName = resourceGroup.Name,
+            RegistryName = registry.Name
+        }); 
+        
+        AdminUsername = credentials.Apply(c => c.Username ?? "");
+        AdminPassword = credentials.Apply(c => Output.CreateSecret(c.Passwords.First().Value ?? ""));
+
         
         RegistryLoginServer = registry.LoginServer;
         RegistryId = registry.Id;
@@ -55,6 +67,12 @@ class MyStack : Stack
     
     [Output]
     public Output<string> RegistryLoginServer { get; set; }
+    
+    [Output]
+    public Output<string> AdminPassword { get; set; }
+    
+    [Output]
+    public Output<string> AdminUsername { get; set; }
 
     /// <summary>
     /// Needed to assign AD permissions to allow AKS to pull images from this ACR
