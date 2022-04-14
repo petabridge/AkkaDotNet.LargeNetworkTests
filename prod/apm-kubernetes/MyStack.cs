@@ -1,11 +1,7 @@
 using System.Collections.Generic;
 using Pulumi;
 using Pulumi.Kubernetes;
-using Pulumi.Kubernetes.Apps.V1;
 using Pulumi.Kubernetes.Helm.V3;
-using Pulumi.Kubernetes.Types.Inputs.Core.V1;
-using Pulumi.Kubernetes.Types.Inputs.Apps.V1;
-using Pulumi.Kubernetes.Types.Inputs.Meta.V1;
 
 class MyStack : Stack
 {

@@ -7,6 +7,7 @@ using Pulumi.AzureNative.ContainerService.Inputs;
 using Pulumi.AzureNative.Authorization;
 using Pulumi.Random;
 using Pulumi.Tls;
+using ResourceIdentityType = Pulumi.AzureNative.ContainerService.ResourceIdentityType;
 
 class MyStack : Stack
 {
@@ -78,7 +79,7 @@ class MyStack : Stack
             },
             DnsPrefix = "AzureNativeprovider",
             EnableRBAC = true,
-            KubernetesVersion = "1.23",
+            KubernetesVersion = "1.22.6",
             LinuxProfile = new ContainerServiceLinuxProfileArgs
             {
                 AdminUsername = "testuser",
