@@ -200,8 +200,12 @@ partial class Build : NukeBuild
             {
                 var image = $"{Directory.GetParent(dockfile).Name}".ToLower();
                 var settings = new DockerImagePushSettings()
-                    .SetName(string.IsNullOrWhiteSpace(DockerRegistryUrl) ? $"{image}:{tagVersion}" : $"{image}:{DockerRegistryUrl}/{tagVersion}");
+                    .SetName($"{DockerRegistryUrl}/{image}:{tagVersion}");
                 DockerTasks.DockerImagePush(settings);
+                
+                var latestSettings = new DockerImagePushSettings()
+                    .SetName($"{DockerRegistryUrl}/{image}:latest");
+                DockerTasks.DockerImagePush(latestSettings);
             }
         });
 
