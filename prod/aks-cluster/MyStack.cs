@@ -1,12 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Pulumi;
 using Pulumi.AzureAD;
 using Pulumi.AzureNative.ContainerService;
 using Pulumi.AzureNative.ContainerService.Inputs;
 using Pulumi.AzureNative.Authorization;
+using Pulumi.Kubernetes.Types.Inputs.Core.V1;
+using Pulumi.Kubernetes.Types.Inputs.Meta.V1;
 using Pulumi.Random;
 using Pulumi.Tls;
+using GetClientConfig = Pulumi.AzureNative.Authorization.GetClientConfig;
 using ResourceIdentityType = Pulumi.AzureNative.ContainerService.ResourceIdentityType;
 
 class MyStack : Stack
@@ -15,6 +19,9 @@ class MyStack : Stack
     {
         var config = new Pulumi.Config();
         var rgStack = new StackReference("petabridge/akkadotnet-largescale-tests/largetests-resource-group");
+
+        // get the Azure Subscription ID of the current sub
+        var currentSubscriptionId = Output.Create(GetClientConfig.InvokeAsync()).Apply(c => c.SubscriptionId);
 
         // need access to resources created in the previous stack
         var rgName = rgStack.RequireOutput("ResourceGroupId").Apply(c => c.ToString());
@@ -90,7 +97,6 @@ class MyStack : Stack
                     }
                 }
             },
-            Identity = new ManagedClusterIdentityArgs { Type = ResourceIdentityType.SystemAssigned },
             ServicePrincipalProfile = new ManagedClusterServicePrincipalProfileArgs
             {
                 ClientId = adApp.ApplicationId,
@@ -101,18 +107,87 @@ class MyStack : Stack
                 { "environment", environmentTag }
             }
         });
-        
+
+        var vmssManagedIdentityPrincipalId = cluster.IdentityProfile.Apply(identityProfile =>
+        {
+            var vmssManagedIdentityProfile = identityProfile!["kubeletidentity"];
+            return vmssManagedIdentityProfile.ObjectId;
+        });
+
         // need to assign ACR Pull permissions to AKS service principal
-        var acrAssignment = new RoleAssignment("aks-acr-pull", new RoleAssignmentArgs()
+        var acrAssignment = new RoleAssignment("acr-pull", new RoleAssignmentArgs()
         {
             PrincipalId = adSp.Id,
+            PrincipalType = PrincipalType.ServicePrincipal,
             Scope = acrInstanceId,
-            RoleDefinitionId = "/subscriptions/0282681f-7a9e-424b-80b2-96babd57a8a1/providers/Microsoft.Authorization/roleDefinitions/7f951dda-4ed3-4680-a7ca-43fe172d538d",
-            RoleAssignmentName = "7f95abcd-4ed3-4680-a7ca-43fe172d538d",
+            RoleDefinitionId = currentSubscriptionId.Apply(s =>
+                $"/subscriptions/{s}/providers/Microsoft.Authorization/roleDefinitions/7f951dda-4ed3-4680-a7ca-43fe172d538d"),
+        }, new CustomResourceOptions()
+        {
+            // have to delete and recreate Azure AD role assignments 
+            DeleteBeforeReplace = true
         });
+        
         
         // Export the KubeConfig
         KubeConfig = GetKubeConfig(rgName, cluster.Name);
+
+        // Create a k8s provider pointing to the kubeconfig.
+        var k8sProvider = new Pulumi.Kubernetes.Provider("k8s", new Pulumi.Kubernetes.ProviderArgs
+        {
+            KubeConfig = KubeConfig
+        });
+
+        var k8sCustomResourceOptions = new CustomResourceOptions
+        {
+            Provider = k8sProvider,
+        };
+
+        var registryLoginServer = rgStack.RequireOutput("RegistryLoginServer").Apply(c => c.ToString());
+        var registryAdminUsername = rgStack.RequireOutput("AdminUsername").Apply(c => c.ToString());
+        var registryAdminPassword = rgStack.RequireOutput("AdminPassword").Apply(c => c.ToString());
+
+        // Create a k8s secret for use when pulling images from the container registry when deploying the sample application.
+        var dockerCfg = Output.All<string>(registryLoginServer, registryAdminUsername, registryAdminPassword).Apply(
+            values =>
+            {
+                var r = new Dictionary<string, object>();
+                var server = values[0];
+                var username = values[1];
+                var dockerPassword = values[2];
+
+                r[server] = new
+                {
+                    email = "notneeded@notneeded.com",
+                    username,
+                    dockerPassword
+                };
+
+                return r;
+            });
+
+        var dockerCfgString = dockerCfg.Apply(x =>
+            Convert.ToBase64String(Encoding.UTF8.GetBytes(System.Text.Json.JsonSerializer.Serialize(x))));
+
+        var dockerCfgSecretName = "dockercfg-secret";
+
+        /*
+         * This needs to go into the default namespace
+         * new SecretArgs
+       
+         */
+        var dockerCfgSecret = new Pulumi.Kubernetes.Core.V1.Secret(dockerCfgSecretName, new SecretArgs()
+        {
+            Data =
+            {
+                { ".dockercfg", dockerCfgString }
+            },
+            Type = "kubernetes.io/dockercfg",
+            Metadata = new ObjectMetaArgs
+            {
+                Name = dockerCfgSecretName,
+            }
+        }, k8sCustomResourceOptions);
     }
 
     [Output("kubeconfig")] public Output<string> KubeConfig { get; set; }
