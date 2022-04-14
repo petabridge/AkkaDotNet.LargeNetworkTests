@@ -12,6 +12,7 @@
     <PackageReference Include="Pulumi.AzureNative" Version="1.62.0" />
     <PackageReference Include="Pulumi.Random" Version="4.*" />
     <PackageReference Include="Pulumi.Tls" Version="4.*" />
+    <PackageReference Include="Pulumi.Kubernetes" Version="3.*" />
   </ItemGroup>
 
 </Project>

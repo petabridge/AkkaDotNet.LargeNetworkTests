@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Reflection;
 using Akka.Configuration;
 using Akka.Hosting;
@@ -40,8 +41,10 @@ public static class SerilogConfigurationExtensions
 
         if (options.EnableSeq)
         {
+            var serverUrl = $"http://{options.SeqHost}:{options.SeqPort}";
+            Console.WriteLine($"Writing logs to {serverUrl}");
             loggerConfiguration = loggerConfiguration
-                .WriteTo.Seq($"http://{options.SeqHost}:{options.SeqPort}")
+                .WriteTo.Seq(serverUrl)
                 .Filter.ByExcluding(ExcludeHealthChecksNormalEvents); // Do not want lots of health check info logs in Seq
         }
         

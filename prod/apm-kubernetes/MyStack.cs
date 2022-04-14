@@ -65,7 +65,7 @@ class MyStack : Stack
         {
             /* define Kubelet metrics scraping */
             ["persistence"]  = new Dictionary<string, object>{
-                ["enabled"] = true,
+                ["enabled"] = false,
                 ["size"] = seqDiskSize
             },
             ["cache"]  = new Dictionary<string, object>{

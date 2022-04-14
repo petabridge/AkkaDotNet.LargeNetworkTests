@@ -55,7 +55,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: akkadotnet.frontend:0.3.2
+        image: akkalargescaleimagesdd1c690b.azurecr.io/akkadotnet.frontend:0.3.2
         env:
         - name: POD_NAME
           valueFrom:
@@ -122,7 +122,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: akkadotnet.backend:0.3.2
+        image: akkalargescaleimagesdd1c690b.azurecr.io/akkadotnet.backend:0.3.2
         env:
         - name: POD_NAME
           valueFrom:

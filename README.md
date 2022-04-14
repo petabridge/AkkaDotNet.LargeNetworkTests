@@ -106,3 +106,58 @@ PS> ./k8s/destroyAll.cmd
 ```
 
 This will delete the `phobos-web` namespace and all of the resources inside it.
+
+## Live Azure Kubernetes Service Deployments
+
+To deploy this application for _live stress testing_ you will need to create a [Pulumi](https://pulumi.com/) acccount and [install Pulumi using Chocolatey](https://www.pulumi.com/docs/get-started/install/):
+
+```shell
+choco install pulumi
+```
+
+Next, you will need to login to the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/) and login to an active Azure subscription:
+
+```shell
+az login
+```
+
+> **N.B.** your account will need to be set to a subscription to which you have sufficient access to create and manage your own resource groups.
+
+### Creating the AKS Environment
+
+To create the AKS environment, head to the [/prod](prod) folder:
+
+```
+d-----         aks-cluster
+d-----         apm-kubernetes
+d-----         azure-resource-group
+```
+
+Each of these contains a Pulumi project that will need to be deployed via the `pulumi up` command __in this specific order__:
+
+```shell
+cd azure-resource-group
+pulumi up
+cd ../aks-cluster
+pulumi up
+cd ../apm-kubernetes
+pulumi up
+```
+
+That will take a few minutes to run - but afterwards you will have a fully functioning AKS environment into which we can deploy our stress testing application.
+
+### Deploying the App
+
+To deploy the stress test application we need to access the [Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/) resource created via Pulumi and login to it via the `docker` CLI.
+
+Use the [`docker login` command](https://docs.docker.com/engine/reference/commandline/login/):
+
+```shell
+docker login {yourACR}.azurecr.io --username {username} --password {password}
+```
+
+This will give you the ability to publish to ACR locally via the `build.cmd` / `build.sh` included inside this repository:
+
+```shell
+build.cmd PublishDockerImages --DockerRegistryUrl {yourACR}.azurecr.io
+```
