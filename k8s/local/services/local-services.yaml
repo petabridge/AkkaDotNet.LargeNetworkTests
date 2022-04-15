@@ -53,6 +53,11 @@ spec:
         app: frontend
         akkacluster: stress
     spec:
+      volumes:
+      - name: diagvol
+        emptyDir: {}
+      - name: dumpsvol
+        emptyDir: {}
       containers:
       - name: frontend
         image: akkadotnet.frontend:0.3.2
@@ -63,9 +68,16 @@ spec:
               fieldPath: metadata.name
         - name: StressOptions__AkkaClusterOptions__Hostname
           value: "$(POD_NAME).frontend-akka"
+        - name: DOTNET_DiagnosticPorts
+          value: /diag/port
         envFrom:
         - configMapRef:
             name: stress-configs
+        volumeMounts:
+        - mountPath: /diag
+          name: diagvol
+        - mountPath: /dumps
+          name: dumpsvol
         readinessProbe:
           httpGet:
             path: "/ready"
@@ -110,7 +122,7 @@ metadata:
     prometheus.io/path: '/metrics'
     prometheus.io/port: '52323'
   labels:
-    app: backend-monitor
+    app: backend
 spec:
   clusterIP: None
   ports:
