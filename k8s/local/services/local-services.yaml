@@ -104,16 +104,18 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-monitor
+  name: backend-monitoring
   annotations:
     prometheus.io/scrape: 'true'
     prometheus.io/path: '/metrics'
     prometheus.io/port: '52323'
   labels:
-    app: backend
+    app: backend-monitor
 spec:
   clusterIP: None
   ports:
+  - port: 52323
+    name: metrics
   selector:
     app: backend
 ---
@@ -193,7 +195,8 @@ spec:
         - name: DOTNETMONITOR_Urls
           value: http://*:52323
         ports:
-          - containerPort: 52323
+        - containerPort: 52323
+          name: metrics
         volumeMounts:
         - mountPath: /diag
           name: diagvol
