@@ -3791,7 +3791,7 @@ data:
             {
               "allValue": null,
               "current": {},
-              "datasource": "${DS_PROMETHEUS}",
+              "datasource": "prometheus",
               "definition": "label_values(app)",
               "description": "Kubernetes Application Name (app:{variable})",
               "error": null,
@@ -3814,7 +3814,7 @@ data:
             {
               "allValue": null,
               "current": {},
-              "datasource": "${DS_PROMETHEUS}",
+              "datasource": "prometheus",
               "definition": "label_values(instance)",
               "description": "The pod instance of each service",
               "error": null,
