@@ -12,6 +12,7 @@
         <PackageReference Include="Akka.Discovery.KubernetesApi" Version="$(AkkaManagementVerison)" />
         <PackageReference Include="Akka.Logger.Serilog" Version="1.4.26" />
         <PackageReference Include="Akka.Management.Cluster.Bootstrap" Version="$(AkkaManagementVerison)" />
+        <PackageReference Include="Akka.Persistence.Azure" Version="0.8.3" />
         <PackageReference Include="Petabridge.Cmd.Cluster" Version="$(PbmVersion)" />
         <PackageReference Include="Petabridge.Cmd.Cluster.Sharding" Version="$(PbmVersion)" />
         <PackageReference Include="Petabridge.Cmd.Remote" Version="$(PbmVersion)" />
@@ -23,6 +24,10 @@
         <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="$(OTelVersion)" />
         <PackageReference Include="OpenTelemetry.Exporter.Prometheus" Version="$(OTelVersion)" />
         <PackageReference Include="Phobos.Hosting" Version="2.0.1" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\AkkaDotNet.Messages\AkkaDotNet.Messages.csproj" />
     </ItemGroup>
 
 </Project>

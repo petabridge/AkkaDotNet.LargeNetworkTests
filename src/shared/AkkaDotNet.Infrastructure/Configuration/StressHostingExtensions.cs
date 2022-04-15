@@ -7,6 +7,8 @@ using Akka.Management;
 using Akka.Management.Cluster.Bootstrap;
 using Akka.Remote.Hosting;
 using AkkaDotNet.Infrastructure.Actors;
+using AkkaDotNet.Infrastructure.Persistence;
+using AkkaDotNet.Messages;
 using Petabridge.Cmd.Cluster;
 using Petabridge.Cmd.Cluster.Sharding;
 using Petabridge.Cmd.Host;
@@ -179,6 +181,7 @@ public static class StressHostingExtensions
             .AddHocon(SbrConfig) // need to add SBR regardless of options
             .WithRemoting(options.AkkaClusterOptions.Hostname, options.AkkaClusterOptions.Port.Value)
             .WithClustering(clusterOptions)
+            .AddPersistence(options.PersistenceOptions)
             .WithPhobos(AkkaRunMode.AkkaCluster, configBuilder =>
             {
                 configBuilder.WithTracing(tracingConfigBuilder =>
@@ -201,6 +204,20 @@ public static class StressHostingExtensions
         {
             var readyCheckActor = system.ActorOf(Props.Create(() => new ReadyCheckActor()), "ready");
             registry.TryRegister<ReadyCheckActor>(readyCheckActor);
+        });
+    }
+
+    public static AkkaConfigurationBuilder WithItemMessagingActor(this AkkaConfigurationBuilder builder)
+    {
+        return builder.StartActors((system, registry) =>
+        {
+            var cluster = Akka.Cluster.Cluster.Get(system);
+            
+            cluster.RegisterOnMemberUp(() =>
+            {
+                var shardRegion = registry.Get<IWithItem>();
+                system.ActorOf(Props.Create(() => new ItemMessagingActor(shardRegion)), "item-messaging");
+            });
         });
     }
 
