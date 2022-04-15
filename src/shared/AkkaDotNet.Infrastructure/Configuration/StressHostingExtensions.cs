@@ -186,6 +186,10 @@ public static class StressHostingExtensions
                     tracingConfigBuilder.SetTraceUserActors(false).SetTraceSystemActors(false);
                 });
             })
+            .StartActors((system, registry) =>
+            {
+                system.ActorOf(Props.Create(() => new DispatcherConfigLogger()));
+            })
             .WithPetabridgeCmd(); // start PetabridgeCmd actors too
 
         return builder;
