@@ -165,6 +165,17 @@ class MyStack : Stack
                 File = Path.Combine("Grafana", "datasource-providers.yml")
             }, new ComponentResourceOptions() { Provider = options.Provider, DependsOn = prometheusOperatorChart });
             
+            var dashboardConfigs = new ConfigGroup("grafana-dashs", new ConfigGroupArgs()
+            {
+                Files = new[]
+                {
+                    Path.Combine("Grafana", "dashboard-akkadotnet-cluster.yml"), 
+                    Path.Combine("Grafana", "dashboard-akkadotnet-latency.yml"), 
+                    Path.Combine("Grafana", "dashboard-dotnet-monitor.yml"),
+                    Path.Combine("Grafana", "dashboard-k8s-cluster.yml")
+                }
+            }, new ComponentResourceOptions() { Provider = options.Provider });
+            
             var grafanaChartValues = new Dictionary<string, object>()
             {
                 /* define Ingress routing */
@@ -172,21 +183,25 @@ class MyStack : Stack
                 {
                     ["enabled"] = true,
                 },
-                // ["dashboardsConfigMaps"] = new List<object>
-                // {
-                //     new {
-                //         configMapName = "grafana-dash-k8s",
-                //         fileName = "k8s-dashboard.json"
-                //     },
-                //     new {
-                //         configMapName = "grafana-dash-akkadotnet",
-                //         fileName = "akkadotnet-dashboard.json"
-                //     },
-                //     new {
-                //         configMapName = "grafana-dash-aspnet",
-                //         fileName = "aspnetcore-dashboard.json"
-                //     }
-                // },
+                ["dashboardsConfigMaps"] = new List<object>
+                {
+                    new {
+                        configMapName = "grafana-dash-dotnet-monitor",
+                        fileName = "dotnet-monitor-dashboard.json"
+                    },
+                    new {
+                        configMapName = "grafana-dash-akkadotnet-cluster",
+                        fileName = "akkadotnet-dashboard.json"
+                    },
+                    new {
+                        configMapName = "grafana-dash-akkadotnet-latency",
+                        fileName = "akkadotnet-latency-dashboard.json"
+                    },
+                    new {
+                        configMapName = "grafana-dash-k8s",
+                        fileName = "k8s-dashboard.json"
+                    }
+                },
                 ["datasources"] = new Dictionary<string, object>()
                 {
                     ["secretName"] = "grafana-prometheus-datasource"
@@ -234,7 +249,7 @@ class MyStack : Stack
             }, new ComponentResourceOptions()
             {
                 Provider = options.Provider,
-                DependsOn = dataSourcesSecret
+                DependsOn = new Resource[]{ dataSourcesSecret, dashboardConfigs }
             });
     }
 }
