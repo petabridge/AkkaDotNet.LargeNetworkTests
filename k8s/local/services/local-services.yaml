@@ -78,7 +78,7 @@ spec:
         emptyDir: {}
       containers:
       - name: frontend
-        image: akkadotnet.frontend:0.3.2
+        image: akkadotnet.frontend:0.3.4
         env:
         - name: POD_NAME
           valueFrom:
@@ -207,7 +207,7 @@ spec:
         emptyDir: {}
       containers:
       - name: backend
-        image: akkadotnet.backend:0.3.2
+        image: akkadotnet.backend:0.3.4
         env:
         - name: POD_NAME
           valueFrom:
