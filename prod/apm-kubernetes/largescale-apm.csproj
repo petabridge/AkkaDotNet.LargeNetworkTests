@@ -29,7 +29,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Remove="Grafana\dashboard-akkadonet-cluster.yml" />
-    <Content Include="Grafana\dashboard-akkadonet-cluster.yml">
+    <Content Include="Grafana\dashboard-akkadotnet-cluster.yml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
