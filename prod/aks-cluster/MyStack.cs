@@ -145,12 +145,6 @@ class MyStack : Stack
             }
         });
 
-        var vmssManagedIdentityPrincipalId = cluster.IdentityProfile.Apply(identityProfile =>
-        {
-            var vmssManagedIdentityProfile = identityProfile!["kubeletidentity"];
-            return vmssManagedIdentityProfile.ObjectId;
-        });
-
         // need to assign ACR Pull permissions to AKS service principal
         var acrAssignment = new RoleAssignment("acr-pull", new RoleAssignmentArgs()
         {

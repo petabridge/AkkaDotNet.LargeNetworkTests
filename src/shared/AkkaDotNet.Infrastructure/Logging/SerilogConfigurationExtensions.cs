@@ -16,7 +16,7 @@ public static class SerilogConfigurationExtensions
     
     public static readonly Config SerilogConfig =
         @"
-        akka.loglevel = DEBUG
+        akka.loglevel = INFO
         akka.loggers =[""Akka.Logger.Serilog.SerilogLogger, Akka.Logger.Serilog""]";
     
     public static string GetServiceName()
