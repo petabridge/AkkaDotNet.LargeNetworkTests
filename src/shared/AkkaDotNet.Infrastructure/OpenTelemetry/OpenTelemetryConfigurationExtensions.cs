@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Diagnostics.Metrics;
+using System.Net;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Metrics;
@@ -10,10 +12,21 @@ namespace AkkaDotNet.Infrastructure.OpenTelemetry;
 
 public static class OpenTelemetryConfigurationExtensions
 {
+    public const string AkkaStressSource = "akkastress";
+    public static readonly Meter AkkaStressMeter = new Meter(AkkaStressSource);
+    
+    public static IServiceCollection AddAppInstrumentation(this IServiceCollection services)
+    {
+        var threadCountGauage =
+            AkkaStressMeter.CreateObservableGauge("ProcessThreads", () => Process.GetCurrentProcess().Threads.Count, "threads", "Total threads belonging to this process");
+        return services;
+    }
+    
     public static IServiceCollection AddOpenTelemetry(this IServiceCollection services)
     {
         // Prometheus exporter won't work without this
         services.AddControllers();
+        services.AddAppInstrumentation();
             
         var resource = ResourceBuilder.CreateDefault()
             .AddService(Assembly.GetEntryAssembly()!.GetName().Name, serviceInstanceId: $"{Dns.GetHostName()}");
@@ -40,6 +53,7 @@ public static class OpenTelemetryConfigurationExtensions
                 .AddPhobosInstrumentation()
                 .AddHttpClientInstrumentation()
                 .AddAspNetCoreInstrumentation()
+                .AddMeter(AkkaStressSource)
                 .AddPrometheusExporter(opt =>
                 {
                 });

@@ -11,6 +11,8 @@ public class StressOptions
     public AkkaClusterOptions AkkaClusterOptions { get; set; } = new AkkaClusterOptions();
 
     public SerilogOptions SerilogOptions { get; set; } = new SerilogOptions();
+
+    public DispatcherConfig DispatcherConfig { get; set; } = DispatcherConfig.Defaults;
 }
 
 public class DistributedPubSubOptions

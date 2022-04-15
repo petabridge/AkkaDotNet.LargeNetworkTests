@@ -54,6 +54,77 @@ public static class StressHostingExtensions
         ";
     }
 
+    public static Config DedicatedThreadPoolConfig32x16 = @"
+        akka.actor.internal-dispatcher {
+        type = ""Dispatcher""
+        executor = ""fork-join-executor""
+        throughput = 5
+
+          fork-join-executor {
+            parallelism-min = 4
+            parallelism-factor = 1.0
+            parallelism-max = 32
+          }
+        }
+
+        akka.remote.default-remote-dispatcher {
+            type = Dispatcher
+            executor = fork-join-executor
+            fork-join-executor {
+              parallelism-min = 2
+              parallelism-factor = 0.5
+              parallelism-max = 16
+            }
+        }
+
+        akka.remote.backoff-remote-dispatcher {
+          executor = fork-join-executor
+          fork-join-executor {
+            parallelism-min = 2
+            parallelism-max = 2
+          }
+        }
+    ";
+
+    public static Config ChannelExecutorConfig64 = @"
+        akka.actor.default-dispatcher = {
+            executor = channel-executor
+            fork-join-executor { #channelexecutor will re-use these settings
+              parallelism-min = 2
+              parallelism-factor = 1
+              parallelism-max = 64
+            }
+        }
+
+        akka.actor.internal-dispatcher = {
+            executor = channel-executor
+            throughput = 5
+            fork-join-executor {
+              parallelism-min = 4
+              parallelism-factor = 1.0
+              parallelism-max = 64
+            }
+        }
+
+        akka.remote.default-remote-dispatcher {
+            type = Dispatcher
+            executor = channel-executor
+            fork-join-executor {
+              parallelism-min = 2
+              parallelism-factor = 0.5
+              parallelism-max = 16
+            }
+        }
+
+        akka.remote.backoff-remote-dispatcher {
+          executor = channel-executor
+          fork-join-executor {
+            parallelism-min = 2
+            parallelism-max = 2
+          }
+        }
+    ";
+
     /// <summary>
     /// TODO: can probably incorporate this into Akka.Hosting
     /// </summary>
@@ -67,13 +138,13 @@ public static class StressHostingExtensions
             }
         }";
     
-    public static AkkaConfigurationBuilder WithClusterBootstrap(this AkkaConfigurationBuilder builder, AkkaClusterOptions options, IEnumerable<string> roles)
+    public static AkkaConfigurationBuilder WithClusterBootstrap(this AkkaConfigurationBuilder builder, StressOptions options, IEnumerable<string> roles)
     {
         var clusterOptions = new ClusterOptions() { Roles = roles.ToArray() };
 
-        if (options.UseKubernetesDiscovery)
+        if (options.AkkaClusterOptions.UseKubernetesDiscovery)
         {
-            var bootstrapConfig = CreateDiscoveryConfig(options)
+            var bootstrapConfig = CreateDiscoveryConfig(options.AkkaClusterOptions)
                 .WithFallback(ClusterBootstrap.DefaultConfiguration())
                 .WithFallback(AkkaManagementProvider.DefaultConfiguration());
             
@@ -89,14 +160,24 @@ public static class StressHostingExtensions
         else
         {
             // not using K8s discovery - need to populate some seed nodes
-            if (options.SeedNodes != null)
-                clusterOptions.SeedNodes = options.SeedNodes.Select(c => Address.Parse(c)).ToArray();
+            if (options.AkkaClusterOptions.SeedNodes != null)
+                clusterOptions.SeedNodes = options.AkkaClusterOptions.SeedNodes.Select(c => Address.Parse(c)).ToArray();
         }
 
-        Debug.Assert(options.Port != null, "options.Port != null");
+        switch (options.DispatcherConfig)
+        {
+            case DispatcherConfig.ChannelExecutor64:
+                builder = builder.AddHocon(ChannelExecutorConfig64, HoconAddMode.Prepend);
+                break;
+            case DispatcherConfig.DedicatedThreadpool32x16:
+                builder = builder.AddHocon(DedicatedThreadPoolConfig32x16, HoconAddMode.Prepend);
+                break;
+        }
+
+        Debug.Assert(options.AkkaClusterOptions.Port != null, "options.Port != null");
         builder = builder
             .AddHocon(SbrConfig) // need to add SBR regardless of options
-            .WithRemoting(options.Hostname, options.Port.Value)
+            .WithRemoting(options.AkkaClusterOptions.Hostname, options.AkkaClusterOptions.Port.Value)
             .WithClustering(clusterOptions)
             .WithPhobos(AkkaRunMode.AkkaCluster, configBuilder =>
             {
@@ -104,6 +185,10 @@ public static class StressHostingExtensions
                 {
                     tracingConfigBuilder.SetTraceUserActors(false).SetTraceSystemActors(false);
                 });
+            })
+            .StartActors((system, registry) =>
+            {
+                system.ActorOf(Props.Create(() => new DispatcherConfigLogger()));
             })
             .WithPetabridgeCmd(); // start PetabridgeCmd actors too
 
