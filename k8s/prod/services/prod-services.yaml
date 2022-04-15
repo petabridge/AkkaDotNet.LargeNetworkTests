@@ -88,6 +88,11 @@ spec:
           value: "$(POD_NAME).frontend-akka"
         - name: DOTNET_DiagnosticPorts
           value: /diag/port
+        - name: StressOptions__PersistenceOptions__AzureStorageConnectionString
+          valueFrom:
+            secretKeyRef:
+              name: azure-storage-connection
+              key: AzureConnectionString
         envFrom:
         - configMapRef:
             name: stress-configs
