@@ -61,7 +61,7 @@ metadata:
     akkacluster: stress
 spec:
   serviceName: "frontend-akka"
-  replicas: 17
+  replicas: 3
   selector:
     matchLabels:
       app: frontend

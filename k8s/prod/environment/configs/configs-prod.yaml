@@ -5,7 +5,7 @@ metadata:
   name: stress-configs
 data:
   # Configuration values can be set as key-value properties
-  environment: Production
+  ASPNETCORE_ENVIRONMENT: Production
 
   # standard Akka.NET ports for all services
   StressOptions__AkkaClusterOptions__ManagementPort: "9221"
@@ -23,4 +23,4 @@ data:
 
   # configure Dispatcher under test
   # "DispatcherConfig": "ChannelExecutor64"
-  StressOptions__DispatcherConfig: "Defaults"
+  StressOptions__DispatcherConfig: "ChannelExecutor64"
