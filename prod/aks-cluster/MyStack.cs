@@ -45,17 +45,11 @@ class MyStack : Stack
         {
             ApplicationId = adApp.ApplicationId
         });
-
-        var randomPassword = new RandomPassword("password", new RandomPasswordArgs
-        {
-            Length = 20,
-            Special = true,
-        }).Result;
-
+        
         var adSpPassword = new ServicePrincipalPassword("aksSpPassword", new ServicePrincipalPasswordArgs
         {
             ServicePrincipalId = adSp.Id,
-            Value = randomPassword,
+            Value = config.RequireSecret("aks.SpPassword"),
             EndDate = "2099-01-01T00:00:00Z",
         });
 
@@ -86,7 +80,7 @@ class MyStack : Stack
                 ResourceGroupName = rgName,
                 AddressSpace = new AddressSpaceArgs()
                 {
-                    AddressPrefixes = { "10.2.0.0/16" }
+                    AddressPrefixes = { "10.0.0.0/16" }
                 },
             });
 
@@ -95,7 +89,7 @@ class MyStack : Stack
         {
             ResourceGroupName = rgName,
             VirtualNetworkName = vnet.Name,
-            AddressPrefixes = "10.2.1.0/24",
+            AddressPrefix = "10.0.0.0/16",
         });
 
         var cluster = new ManagedCluster("akkastress", new ManagedClusterArgs()
@@ -116,7 +110,7 @@ class MyStack : Stack
                     VnetSubnetID = subnet.Id,
                 }
             },
-            DnsPrefix = "AzureNativeprovider",
+            DnsPrefix = "akkastress",
             EnableRBAC = true,
             KubernetesVersion = "1.22.6",
             LinuxProfile = new ContainerServiceLinuxProfileArgs
