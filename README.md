@@ -161,3 +161,13 @@ This will give you the ability to publish to ACR locally via the `build.cmd` / `
 ```shell
 build.cmd PublishDockerImages --DockerRegistryUrl {yourACR}.azurecr.io
 ```
+
+#### Troubleshooting
+
+**In case ACR images can't be pulled by AKS** - this is a persistent challenge with Pulumi for some reason, but in case the Pulumi script doesn't resolve the issue automatically you can try the following:
+
+```shell
+az aks update -n myAKSCluster -g myResourceGroup --attach-acr <acr-name>
+```
+
+See [Authenticate with Azure Container Registry from Azure Kubernetes Service](https://docs.microsoft.com/en-us/azure/aks/cluster-container-registry-integration?tabs=azure-cli) for more details.
