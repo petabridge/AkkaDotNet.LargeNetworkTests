@@ -6,6 +6,8 @@ using Pulumi.AzureAD;
 using Pulumi.AzureNative.ContainerService;
 using Pulumi.AzureNative.ContainerService.Inputs;
 using Pulumi.AzureNative.Authorization;
+using Pulumi.AzureNative.Network.Inputs;
+using Pulumi.AzureNative.Security;
 using Pulumi.Kubernetes.Types.Inputs.Core.V1;
 using Pulumi.Kubernetes.Types.Inputs.Meta.V1;
 using Pulumi.Random;
@@ -24,7 +26,8 @@ class MyStack : Stack
         var currentSubscriptionId = Output.Create(GetClientConfig.InvokeAsync()).Apply(c => c.SubscriptionId);
 
         // need access to resources created in the previous stack
-        var rgName = rgStack.RequireOutput("ResourceGroupId").Apply(c => c.ToString());
+        var rgId = rgStack.RequireOutput("ResourceGroupId").Apply(c => c.ToString());
+        var rgName = rgStack.RequireOutput("ResourceGroupName").Apply(c => c.ToString());
         var acrInstanceId = rgStack.RequireOutput("RegistryId").Apply(c => c.ToString());
 
         var aksSku = config.Require("aks.VmSku");
@@ -63,6 +66,38 @@ class MyStack : Stack
             RsaBits = 4096
         });
 
+        // Grant networking permissions to the SP (needed e.g. to provision Load Balancers).
+        // list of built-in roles https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
+        var assignment = new RoleAssignment("network-role-assignment", new RoleAssignmentArgs
+        {
+            PrincipalId = adSp.Id,
+            PrincipalType = PrincipalType.ServicePrincipal,
+            Scope = rgId,
+            // "Network Contributor" role definition
+            // Need this for creating LoadBalancers et al
+            RoleDefinitionId = currentSubscriptionId.Apply(s =>
+                $"/subscriptions/{s}/providers/Microsoft.Authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7"),
+        });
+
+        // Create a Virtual Network for the cluster.
+        var vnet = new Pulumi.AzureNative.Network.VirtualNetwork("vnet",
+            new Pulumi.AzureNative.Network.VirtualNetworkArgs
+            {
+                ResourceGroupName = rgName,
+                AddressSpace = new AddressSpaceArgs()
+                {
+                    AddressPrefixes = { "10.2.0.0/16" }
+                },
+            });
+
+        // Create a Subnet for the cluster.
+        var subnet = new Pulumi.AzureNative.Network.Subnet("aks-subnet", new Pulumi.AzureNative.Network.SubnetArgs
+        {
+            ResourceGroupName = rgName,
+            VirtualNetworkName = vnet.Name,
+            AddressPrefixes = "10.2.1.0/24",
+        });
+
         var cluster = new ManagedCluster("akkastress", new ManagedClusterArgs()
         {
             ResourceGroupName = rgName,
@@ -78,6 +113,7 @@ class MyStack : Stack
                     OsType = "Linux",
                     Type = "VirtualMachineScaleSets",
                     VmSize = aksSku,
+                    VnetSubnetID = subnet.Id,
                 }
             },
             DnsPrefix = "AzureNativeprovider",
@@ -101,6 +137,13 @@ class MyStack : Stack
             {
                 ClientId = adApp.ApplicationId,
                 Secret = adSpPassword.Value
+            },
+            NetworkProfile = new ContainerServiceNetworkProfileArgs()
+            {
+                NetworkPlugin = "azure",
+                DnsServiceIP = "10.2.3.254",
+                ServiceCidr = "10.2.3.0/24",
+                DockerBridgeCidr = "172.17.0.1/16",
             },
             Tags =
             {
@@ -127,8 +170,8 @@ class MyStack : Stack
             // have to delete and recreate Azure AD role assignments 
             DeleteBeforeReplace = true
         });
-        
-        
+
+
         // Export the KubeConfig
         KubeConfig = GetKubeConfig(rgName, cluster.Name);
 
