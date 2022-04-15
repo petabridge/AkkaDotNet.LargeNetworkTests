@@ -11,12 +11,14 @@ public static class PersistenceHostingExtensions
         return $@"
             akka.persistence {{
                 journal {{
+                    plugin = ""akka.persistence.journal.azure-table""
                     azure-table {{
                         class = ""Akka.Persistence.Azure.Journal.AzureTableStorageJournal, Akka.Persistence.Azure""
                         connection-string = ""{connectionString}""
                     }}
                 }}
                  snapshot-store {{
+                     plugin = ""akka.persistence.snapshot-store.azure-blob-store""
                      azure-blob-store {{
                         class = ""Akka.Persistence.Azure.Snapshot.AzureBlobSnapshotStore, Akka.Persistence.Azure""
                         connection-string = ""{connectionString}""
@@ -32,7 +34,7 @@ public static class PersistenceHostingExtensions
         {
             var persistenceHocon = GetPersistenceHocon(options.AzureStorageConnectionString)
                 .WithFallback(AzurePersistence.DefaultConfig);
-            configurationBuilder.AddHocon(persistenceHocon);
+            configurationBuilder.AddHocon(persistenceHocon, HoconAddMode.Prepend);
         }
 
         return configurationBuilder;
