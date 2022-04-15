@@ -16,6 +16,22 @@
     <Content Include="Grafana\datasource-providers.yml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Remove="Grafana\dashboard-k8s-cluster.yml" />
+    <Content Include="Grafana\dashboard-k8s-cluster.yml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Grafana\dashboard-dotnet-monitor.yml" />
+    <Content Include="Grafana\dashboard-dotnet-monitor.yml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Grafana\dashboard-akkadotnet-latency.yml" />
+    <Content Include="Grafana\dashboard-akkadotnet-latency.yml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Grafana\dashboard-akkadonet-cluster.yml" />
+    <Content Include="Grafana\dashboard-akkadotnet-cluster.yml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

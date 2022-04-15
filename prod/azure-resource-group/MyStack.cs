@@ -17,7 +17,8 @@ class MyStack : Stack
         // Create an Azure Resource Group
         var resourceGroup = new ResourceGroup(rgName);
 
-        ResourceGroupId = resourceGroup.Name;
+        ResourceGroupId = resourceGroup.Id;
+        ResourceGroupName = resourceGroup.Name;
 
         // Create an Azure resource (Storage Account)
         var storageAccount = new StorageAccount("sa", new StorageAccountArgs
@@ -60,6 +61,9 @@ class MyStack : Stack
     
     [Output]
     public Output<string> ResourceGroupId { get; set; }
+    
+    [Output]
+    public Output<string> ResourceGroupName { get; set; }
 
     [Output]
     public Output<string> PrimaryStorageKey { get; set; }
