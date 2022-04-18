@@ -30,7 +30,7 @@ class MyStack : Stack
             },
             Kind = Kind.StorageV2,
         });
-        
+
         // create an Azure Container Registry
         var registry = new Registry($"{rgName}images".ToLowerInvariant(), new RegistryArgs
         {
@@ -57,6 +57,12 @@ class MyStack : Stack
         // Export the primary key of the Storage Account
         this.PrimaryStorageKey = Output.Tuple(resourceGroup.Name, storageAccount.Name).Apply(names =>
             Output.CreateSecret(GetStorageAccountPrimaryKey(names.Item1, names.Item2)));
+
+        StorageConnectionString = Output.Tuple(storageAccount.Name, PrimaryStorageKey).Apply(tuple =>
+        {
+            return $"DefaultEndpointsProtocol=https;AccountName={tuple.Item1};AccountKey={tuple.Item2};EndpointSuffix=core.windows.net";
+        });
+
     }
     
     [Output]
@@ -67,6 +73,9 @@ class MyStack : Stack
 
     [Output]
     public Output<string> PrimaryStorageKey { get; set; }
+    
+    [Output]
+    public Output<string> StorageConnectionString { get; set; }
     
     
     [Output]

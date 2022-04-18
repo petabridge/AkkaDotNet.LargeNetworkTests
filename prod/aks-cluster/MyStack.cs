@@ -30,6 +30,8 @@ class MyStack : Stack
         var rgName = rgStack.RequireOutput("ResourceGroupName").Apply(c => c.ToString());
         var acrInstanceId = rgStack.RequireOutput("RegistryId").Apply(c => c.ToString());
 
+        var azureStorageConnectionString = rgStack.RequireOutput("StorageConnectionString").Apply(c => c.ToString());
+
         var aksSku = config.Require("aks.VmSku");
         var aksNodeCount = config.RequireInt32("aks.NodeCount");
         var environmentTag = config.Require("environment");
@@ -219,6 +221,19 @@ class MyStack : Stack
                 Name = dockerCfgSecretName,
             }
         }, k8sCustomResourceOptions);
+
+        var azureConnectionStringSecret = new Pulumi.Kubernetes.Core.V1.Secret("azure-storage-secret", new SecretArgs()
+        {
+            StringData =
+            {
+                { "AzureConnectionString",  azureStorageConnectionString }   
+            },
+            Type = "Opaque",
+            Metadata = new ObjectMetaArgs
+            {
+                Name = "azure-connection-string"
+            }
+        });
     }
 
     [Output("kubeconfig")] public Output<string> KubeConfig { get; set; }

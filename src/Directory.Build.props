@@ -2,8 +2,8 @@
   <PropertyGroup>
     <Copyright>Copyright © 2022 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.3.4</VersionPrefix>
-    <PackageReleaseNotes>• Added ObservableGauge to track total thread counts per process</PackageReleaseNotes>
+    <VersionPrefix>0.4.1</VersionPrefix>
+    <PackageReleaseNotes>• Disabled ASP.NET Core boilerplate logs</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
     <PackageProjectUrl>

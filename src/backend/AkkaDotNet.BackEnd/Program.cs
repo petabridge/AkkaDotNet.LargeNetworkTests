@@ -1,16 +1,21 @@
 using Akka.Actor;
+using Akka.Cluster.Hosting;
+using Akka.Cluster.Sharding;
 using Akka.Hosting;
+using AkkaDotNet.BackEnd.Actors;
 using AkkaDotNet.Infrastructure;
 using AkkaDotNet.Infrastructure.Actors;
 using AkkaDotNet.Infrastructure.Configuration;
 using AkkaDotNet.Infrastructure.Logging;
 using AkkaDotNet.Infrastructure.OpenTelemetry;
+using AkkaDotNet.Infrastructure.Sharding;
+using AkkaDotNet.Messages;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables();
 
-builder.Logging.ClearProviders().AddConsole().AddSerilog();
+builder.Logging.ClearProviders().AddConsole().AddSerilog().AddFilter(null, LogLevel.Warning);
 
 var akkaConfiguration = builder.Configuration.GetRequiredSection(nameof(StressOptions)).Get<StressOptions>();
 
@@ -20,6 +25,14 @@ builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuil
         new[] { ActorSystemConstants.BackendRole, ActorSystemConstants.DistributedPubSubRole });
     configurationBuilder.WithSerilog(akkaConfiguration.SerilogOptions);
     configurationBuilder.WithReadyCheckActors();
+    configurationBuilder.WithShardRegion<IWithItem>("items", s => ItemActor.PropsFor(s), new ItemShardExtractor(),
+        new ShardOptions()
+        {
+            RememberEntities = false,
+            Role = ActorSystemConstants.BackendRole,
+            StateStoreMode = StateStoreMode.DData
+        })
+        .WithItemMessagingActor();
 });
 
 builder.Services.AddOpenTelemetry();

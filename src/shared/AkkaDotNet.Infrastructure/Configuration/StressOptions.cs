@@ -1,4 +1,5 @@
 ﻿using AkkaDotNet.Infrastructure.Logging;
+using AkkaDotNet.Infrastructure.Persistence;
 
 namespace AkkaDotNet.Infrastructure.Configuration;
 
@@ -13,6 +14,8 @@ public class StressOptions
     public SerilogOptions SerilogOptions { get; set; } = new SerilogOptions();
 
     public DispatcherConfig DispatcherConfig { get; set; } = DispatcherConfig.Defaults;
+
+    public PersistenceOptions PersistenceOptions { get; set; } = new PersistenceOptions();
 }
 
 public class DistributedPubSubOptions

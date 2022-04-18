@@ -78,7 +78,7 @@ spec:
         emptyDir: {}
       containers:
       - name: frontend
-        image: akkalargescaleimagesdd1c690b.azurecr.io/akkadotnet.frontend:0.3.4
+        image: akkalargescaleimagesdd1c690b.azurecr.io/akkadotnet.frontend:0.4.1
         env:
         - name: POD_NAME
           valueFrom:
@@ -207,7 +207,7 @@ spec:
         emptyDir: {}
       containers:
       - name: backend
-        image: akkalargescaleimagesdd1c690b.azurecr.io/akkadotnet.backend:0.3.4
+        image: akkalargescaleimagesdd1c690b.azurecr.io/akkadotnet.backend:0.4.1
         env:
         - name: POD_NAME
           valueFrom:
@@ -217,6 +217,11 @@ spec:
           value: "$(POD_NAME).backend-akka"
         - name: DOTNET_DiagnosticPorts
           value: /diag/port
+        - name: StressOptions__PersistenceOptions__AzureStorageConnectionString
+          valueFrom:
+            secretKeyRef:
+              name: azure-storage-connection
+              key: AzureConnectionString
         envFrom:
         - configMapRef:
             name: stress-configs

@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\shared\AkkaDotNet.Infrastructure\AkkaDotNet.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\shared\AkkaDotNet.Messages\AkkaDotNet.Messages.csproj" />
     </ItemGroup>
 
     <ItemGroup>
