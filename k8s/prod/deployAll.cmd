@@ -6,8 +6,7 @@ set location=%~dp0/environment
 
 echo "Deploying K8s resources from [%location%] into namespace [%namespace%]"
 
-echo "Creating Namespaces..."
-kubectl create ns "%namespace%"
+REM namespace is created via Pulumi in production
 
 echo "Using namespace [%namespace%] going forward..."
 
