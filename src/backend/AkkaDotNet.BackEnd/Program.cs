@@ -30,7 +30,7 @@ builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuil
         {
             RememberEntities = false,
             Role = ActorSystemConstants.BackendRole,
-            StateStoreMode = StateStoreMode.DData
+            StateStoreMode = StateStoreMode.Persistence
         })
         .WithItemMessagingActor();
 });

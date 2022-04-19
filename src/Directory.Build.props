@@ -2,8 +2,8 @@
   <PropertyGroup>
     <Copyright>Copyright © 2022 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.4.3</VersionPrefix>
-    <PackageReleaseNotes>• Bumped Akka.Remote max-frame-size to 1mb%2C buffer sizes to 2mb.</PackageReleaseNotes>
+    <VersionPrefix>0.4.5</VersionPrefix>
+    <PackageReleaseNotes>• Switched Cluster.Sharding state-store-mode=persistence</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
     <PackageProjectUrl>
