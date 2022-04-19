@@ -127,6 +127,12 @@ public static class StressHostingExtensions
         }
     ";
 
+    public static readonly Config MaxFrameSize = @"
+        akka.remote.dot-netty.tcp.send-buffer-size = 2m
+        akka.remote.dot-netty.tcp.receive-buffer-size = 2m
+        akka.remote.dot-netty.tcp.maximum-frame-size = 1m
+    ";
+
     /// <summary>
     /// TODO: can probably incorporate this into Akka.Hosting
     /// </summary>
@@ -179,6 +185,7 @@ public static class StressHostingExtensions
         Debug.Assert(options.AkkaClusterOptions.Port != null, "options.Port != null");
         builder = builder
             .AddHocon(SbrConfig) // need to add SBR regardless of options
+            .AddHocon(MaxFrameSize)
             .WithRemoting(options.AkkaClusterOptions.Hostname, options.AkkaClusterOptions.Port.Value)
             .WithClustering(clusterOptions)
             .AddPersistence(options.PersistenceOptions)
