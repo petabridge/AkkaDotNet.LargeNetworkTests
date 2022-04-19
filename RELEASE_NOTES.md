@@ -1,8 +1,8 @@
-## [0.4.1] / 15 April 2022
-- Disabled ASP.NET Core boilerplate logs
+## [0.4.3] / 15 April 2022
+- Bumped Akka.Remote max-frame-size to 1mb, buffer sizes to 2mb.
 
-## [0.4.0] / 15 April 2022
-- Added `Akka.Persistence.Azure` and Akka.Cluster.Sharding support
+## [0.4.2] / 15 April 2022
+- Bumped Akka.Remote max-frame-size to 1mb, buffer sizes to 2mb.
 
 ## [0.3.4] / 15 April 2022
 - Added `ObservableGauge` to track total thread counts per process

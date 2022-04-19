@@ -110,6 +110,7 @@ class MyStack : Stack
                     Type = "VirtualMachineScaleSets",
                     VmSize = aksSku,
                     VnetSubnetID = subnet.Id,
+                    AvailabilityZones = "1" // only deploy in a single AZ to keep bandwidth costs down
                 }
             },
             DnsPrefix = "akkastress",

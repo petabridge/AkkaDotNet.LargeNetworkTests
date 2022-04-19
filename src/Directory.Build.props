@@ -2,8 +2,8 @@
   <PropertyGroup>
     <Copyright>Copyright © 2022 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.4.1</VersionPrefix>
-    <PackageReleaseNotes>• Disabled ASP.NET Core boilerplate logs</PackageReleaseNotes>
+    <VersionPrefix>0.4.3</VersionPrefix>
+    <PackageReleaseNotes>• Testing deployments.</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
     <PackageProjectUrl>
