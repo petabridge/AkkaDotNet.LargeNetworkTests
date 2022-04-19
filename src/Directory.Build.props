@@ -3,7 +3,7 @@
     <Copyright>Copyright © 2022 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
     <VersionPrefix>0.4.3</VersionPrefix>
-    <PackageReleaseNotes>• Testing deployments.</PackageReleaseNotes>
+    <PackageReleaseNotes>• Bumped Akka.Remote max-frame-size to 1mb%2C buffer sizes to 2mb.</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
     <PackageProjectUrl>
