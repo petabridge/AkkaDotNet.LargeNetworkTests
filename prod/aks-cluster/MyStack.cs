@@ -223,6 +223,27 @@ class MyStack : Stack
             }
         }, k8sCustomResourceOptions);
 
+        var appnamespace = new Pulumi.Kubernetes.Core.V1.Namespace("akkastress", new NamespaceArgs()
+        {
+            Metadata = new ObjectMetaArgs(){
+                Name = "akkastress"
+            },
+            ApiVersion = "v1",
+            Kind = "Namespace"
+        }, k8sCustomResourceOptions);
+        
+        var appNamespaceProvider = new Pulumi.Kubernetes.Provider("k8s-akkastress-provider", new Pulumi.Kubernetes.ProviderArgs()
+        {
+            KubeConfig = KubeConfig,
+            Namespace = appnamespace.Metadata.Apply(c => c.Name)
+        });
+        
+        var k8sCustomAppResourceOptions = new CustomResourceOptions
+        {
+            Provider = appNamespaceProvider,
+        };
+        
+        // need to create this resource in the `akkastress` namespace
         var azureConnectionStringSecret = new Pulumi.Kubernetes.Core.V1.Secret("azure-storage-secret", new SecretArgs()
         {
             StringData =
@@ -234,7 +255,7 @@ class MyStack : Stack
             {
                 Name = "azure-connection-string"
             }
-        });
+        }, k8sCustomAppResourceOptions);
     }
 
     [Output("kubeconfig")] public Output<string> KubeConfig { get; set; }
