@@ -1,3 +1,12 @@
+## [0.4.6] / 19 April 2022
+- Arbitrary bump for deployment purposes
+
+## [0.4.5] / 19 April 2022
+- Switched Cluster.Sharding `state-store-mode=persistence`
+
+## [0.4.4] / 19 April 2022
+- Bumped Phobos to 2.0.2
+
 ## [0.4.3] / 15 April 2022
 - Bumped Akka.Remote max-frame-size to 1mb, buffer sizes to 2mb.
 
