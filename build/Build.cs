@@ -118,7 +118,7 @@ partial class Build : NukeBuild
             DotNetRestore(s => s
                 .DisableProcessLogOutput()
                 .DisableProcessLogInvocation()
-                .SetProjectFile(Solution).AddSources(sources));
+                .SetProjectFile(Solution));
         });
     Target CreateNuget => _ => _
       .Description("Creates nuget packages")
