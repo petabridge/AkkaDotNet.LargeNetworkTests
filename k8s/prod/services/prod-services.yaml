@@ -78,7 +78,7 @@ spec:
         emptyDir: {}
       containers:
       - name: frontend
-        image: akkalargescaleimages64b06635.azurecr.io/akkadotnet.frontend:0.4.5
+        image: akkalargescaleimages64b06635.azurecr.io/akkadotnet.frontend:0.4.6
         env:
         - name: POD_NAME
           valueFrom:
@@ -190,7 +190,7 @@ metadata:
     akkacluster: stress
 spec:
   serviceName: "backend-akka"
-  replicas: 3
+  replicas: 130
   selector:
     matchLabels:
       app: backend
@@ -207,7 +207,7 @@ spec:
         emptyDir: {}
       containers:
       - name: backend
-        image: akkalargescaleimages64b06635.azurecr.io/akkadotnet.backend:0.4.5
+        image: akkalargescaleimages64b06635.azurecr.io/akkadotnet.backend:0.4.6
         env:
         - name: POD_NAME
           valueFrom:

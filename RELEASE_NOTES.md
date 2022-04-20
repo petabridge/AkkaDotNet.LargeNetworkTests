@@ -1,3 +1,6 @@
+## [0.4.6] / 19 April 2022
+- Arbitrary bump for deployment purposes
+
 ## [0.4.5] / 19 April 2022
 - Switched Cluster.Sharding `state-store-mode=persistence`
 

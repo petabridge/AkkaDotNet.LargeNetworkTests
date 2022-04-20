@@ -2,8 +2,8 @@
   <PropertyGroup>
     <Copyright>Copyright © 2022 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.4.5</VersionPrefix>
-    <PackageReleaseNotes>• Switched Cluster.Sharding state-store-mode=persistence</PackageReleaseNotes>
+    <VersionPrefix>0.4.6</VersionPrefix>
+    <PackageReleaseNotes>• Arbitrary bump for deployment purposes</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
     <PackageProjectUrl>
