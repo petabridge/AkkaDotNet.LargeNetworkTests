@@ -82,6 +82,11 @@ public class ItemActor : ReceivePersistentActor
         {
             _log.Info("Confirmed subscription to [{0}]", a.Subscribe.Topic);
         });
+
+        Command<Ping>(p =>
+        {
+            Sender.Tell(p);
+        });
     }
 
     private void SaveSnapshotWhenAble()
