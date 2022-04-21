@@ -1,3 +1,4 @@
+using System;
 using Akka.Actor;
 using Akka.Cluster.Hosting;
 using Akka.Cluster.Sharding;
@@ -30,7 +31,7 @@ builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuil
         {
             RememberEntities = false,
             Role = ActorSystemConstants.BackendRole,
-            StateStoreMode = StateStoreMode.Persistence
+            StateStoreMode = StateStoreMode.DData
         })
         .WithItemMessagingActor();
 });

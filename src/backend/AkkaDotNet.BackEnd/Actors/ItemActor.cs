@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Akka.Cluster.Sharding;
 using Akka.Event;
 using Akka.Persistence;
 using AkkaDotNet.Messages;
@@ -69,6 +70,11 @@ public class ItemActor : ReceivePersistentActor
             DeleteMessages(s.Metadata.SequenceNr);
             DeleteSnapshots(new SnapshotSelectionCriteria(s.Metadata.SequenceNr-1));
         });
+
+        Command<ReceiveTimeout>(_ =>
+        {
+            Context.Parent.Tell(new Passivate(PoisonPill.Instance));
+        });
     }
 
     private void SaveSnapshotWhenAble()
@@ -80,4 +86,9 @@ public class ItemActor : ReceivePersistentActor
     }
 
     public override string PersistenceId { get; }
+
+    protected override void PreStart()
+    {
+        Context.SetReceiveTimeout(TimeSpan.FromMinutes(2));
+    }
 }

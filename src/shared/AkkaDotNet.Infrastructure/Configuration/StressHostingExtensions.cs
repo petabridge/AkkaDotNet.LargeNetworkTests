@@ -2,6 +2,7 @@
 using Akka.Actor;
 using Akka.Cluster.Hosting;
 using Akka.Configuration;
+using Akka.Coordination.KubernetesApi;
 using Akka.Hosting;
 using Akka.Management;
 using Akka.Management.Cluster.Bootstrap;
@@ -136,7 +137,7 @@ public static class StressHostingExtensions
     /// <summary>
     /// TODO: can probably incorporate this into Akka.Hosting
     /// </summary>
-    public static Config SbrConfig => @"
+    public static Config DefaultSbrConfig => @"
             akka.cluster{
 	        downing-provider-class = ""Akka.Cluster.SBR.SplitBrainResolverProvider, Akka.Cluster""
             
@@ -145,6 +146,20 @@ public static class StressHostingExtensions
                 down-all-when-unstable = off
             }
         }";
+
+    public static Config K8sLeaseSbrConfig => ConfigurationFactory.ParseString(@"
+         akka.cluster{
+	        downing-provider-class = ""Akka.Cluster.SBR.SplitBrainResolverProvider, Akka.Cluster""
+            
+            split-brain-resolver {
+                active-strategy = lease-majority
+                down-all-when-unstable = off
+                lease-majority {
+                    lease-implementation = ""akka.coordination.lease.kubernetes""
+                }
+            }
+        }
+    ").WithFallback(KubernetesLease.DefaultConfiguration);
     
     public static AkkaConfigurationBuilder WithClusterBootstrap(this AkkaConfigurationBuilder builder, StressOptions options, IEnumerable<string> roles)
     {
@@ -184,7 +199,7 @@ public static class StressHostingExtensions
 
         Debug.Assert(options.AkkaClusterOptions.Port != null, "options.Port != null");
         builder = builder
-            .AddHocon(SbrConfig) // need to add SBR regardless of options
+            .AddHocon(options.AkkaClusterOptions.UseKubernetesLease ? K8sLeaseSbrConfig : DefaultSbrConfig) // need to add SBR 
             .AddHocon(MaxFrameSize)
             .WithRemoting(options.AkkaClusterOptions.Hostname, options.AkkaClusterOptions.Port.Value)
             .WithClustering(clusterOptions)

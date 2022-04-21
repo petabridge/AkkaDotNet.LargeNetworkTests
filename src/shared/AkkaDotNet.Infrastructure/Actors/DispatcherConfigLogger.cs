@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Akka.Actor;
+using Akka.Cluster.Sharding;
 using Akka.Event;
 
 namespace AkkaDotNet.Infrastructure.Actors;
@@ -34,6 +35,9 @@ public sealed class DispatcherConfigLogger : ReceiveActor
                 .AppendLine(sysConfig.GetConfig("akka.remote.backoff-remote-dispatcher").ToString(false));
             
             _log.Warning(stringBuilder.ToString());
+            
+            var t = typeof(ShardRegion).Assembly;
+            _log.Warning("Running with version {0} of Akka.Cluster.Sharding", t);
         });
     }
 

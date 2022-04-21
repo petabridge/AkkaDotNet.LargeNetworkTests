@@ -10,6 +10,7 @@ data:
   # standard Akka.NET ports for all services
   StressOptions__AkkaClusterOptions__ManagementPort: "9221"
   StressOptions__AkkaClusterOptions__ManagementPort: "9228"
+  StressOptions__AkkaClusterOptions__UseKubernetesLease: "true"
 
   # configure Akka.Management K8s service discovery
   StressOptions__AkkaClusterOptions__UseKubernetesDiscovery: "true"
