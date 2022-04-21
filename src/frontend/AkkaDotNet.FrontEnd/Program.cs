@@ -1,5 +1,6 @@
 ﻿using Akka.Actor;
 using Akka.Hosting;
+using AkkaDotNet.FrontEnd.Actors;
 using AkkaDotNet.Infrastructure;
 using AkkaDotNet.Infrastructure.Actors;
 using AkkaDotNet.Infrastructure.Configuration;
@@ -20,6 +21,14 @@ builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuil
         new[] { ActorSystemConstants.FrontendRole, ActorSystemConstants.DistributedPubSubRole });
     configurationBuilder.WithSerilog(akkaConfiguration.SerilogOptions);
     configurationBuilder.WithReadyCheckActors();
+    configurationBuilder.StartActors((system, registry) =>
+    {
+        var cluster = Akka.Cluster.Cluster.Get(system);
+        cluster.RegisterOnMemberUp(() =>
+        {
+            system.ActorOf(Props.Create(() => new PingerActor()), "pinger");
+        });
+    });
 });
 
 builder.Services.AddOpenTelemetry();
