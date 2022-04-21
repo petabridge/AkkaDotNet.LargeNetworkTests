@@ -2,9 +2,8 @@
   <PropertyGroup>
     <Copyright>Copyright © 2022 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.5.4</VersionPrefix>
-    <PackageReleaseNotes>• Disable remember-entities%2C but keep DData
-• Enable K8s lease
+    <VersionPrefix>0.5.9</VersionPrefix>
+    <PackageReleaseNotes>• Added DistributedPubSub
 • Run with Akka.NET v1.5.0-beta</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>

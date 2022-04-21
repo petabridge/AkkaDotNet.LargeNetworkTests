@@ -1,3 +1,12 @@
+## [0.5.9] / 21 April 2022
+- Added `DistributedPubSub`
+- Run with Akka.NET v1.5.0-beta
+
+## [0.5.5] / 21 April 2022
+- Disable `remember-entities`, but keep DData
+- Disable K8s lease
+- Run with Akka.NET v1.5.0-beta
+
 ## [0.5.4] / 20 April 2022
 - Disable `remember-entities`, but keep DData
 - Enable K8s lease

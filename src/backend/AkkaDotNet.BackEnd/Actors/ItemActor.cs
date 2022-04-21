@@ -1,7 +1,9 @@
 ﻿using Akka.Actor;
 using Akka.Cluster.Sharding;
+using Akka.Cluster.Tools.PublishSubscribe;
 using Akka.Event;
 using Akka.Persistence;
+using AkkaDotNet.Infrastructure;
 using AkkaDotNet.Messages;
 using AkkaDotNet.Messages.Commands;
 using AkkaDotNet.Messages.Events;
@@ -12,7 +14,7 @@ public class ItemActor : ReceivePersistentActor
 {
     private int _count = 0;
     private readonly ILoggingAdapter _log = Context.GetLogger();
-    
+
     public static Props PropsFor(string itemId)
     {
         return Props.Create(() => new ItemActor(itemId));
@@ -75,6 +77,11 @@ public class ItemActor : ReceivePersistentActor
         {
             Context.Parent.Tell(new Passivate(PoisonPill.Instance));
         });
+        
+        Command<SubscribeAck>(a =>
+        {
+            _log.Info("Confirmed subscription to [{0}]", a.Subscribe.Topic);
+        });
     }
 
     private void SaveSnapshotWhenAble()
@@ -90,5 +97,7 @@ public class ItemActor : ReceivePersistentActor
     protected override void PreStart()
     {
         Context.SetReceiveTimeout(TimeSpan.FromMinutes(2));
+        var mediator = DistributedPubSub.Get(Context.System).Mediator;
+        mediator.Tell(new Subscribe(ActorSystemConstants.PingTopicName, Self), Self);
     }
 }
