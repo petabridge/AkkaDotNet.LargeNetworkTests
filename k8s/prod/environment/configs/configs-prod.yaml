@@ -12,6 +12,12 @@ data:
   StressOptions__AkkaClusterOptions__ManagementPort: "9228"
   StressOptions__AkkaClusterOptions__UseKubernetesLease: "false"
 
+  # DistributedPubSub options
+  StressOptions__DistributedPubSubOptions__Enabled: "false"
+
+  # Sharding options
+  StressOptions__ShardingOptions__UseDData: "false"
+
   # configure Akka.Management K8s service discovery
   StressOptions__AkkaClusterOptions__UseKubernetesDiscovery: "true"
   StressOptions__AkkaClusterOptions__KubernetesDiscoveryOptions__PodNamespace: "akkastress"

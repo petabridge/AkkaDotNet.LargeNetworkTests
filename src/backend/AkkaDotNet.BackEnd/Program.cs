@@ -26,7 +26,7 @@ builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuil
         new[] { ActorSystemConstants.BackendRole, ActorSystemConstants.DistributedPubSubRole });
     configurationBuilder.WithSerilog(akkaConfiguration.SerilogOptions);
     configurationBuilder.WithReadyCheckActors();
-    configurationBuilder.WithShardRegion<IWithItem>("items", s => ItemActor.PropsFor(s), new ItemShardExtractor(),
+    configurationBuilder.WithShardRegion<IWithItem>("items", s => ItemActor.PropsFor(s, akkaConfiguration.DistributedPubSubOptions.Enabled), new ItemShardExtractor(),
         new ShardOptions()
         {
             RememberEntities = false,
