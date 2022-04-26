@@ -8,7 +8,7 @@
     
     <ItemGroup>
         <PackageReference Include="Akka.Cluster.Hosting" Version="$(AkkaHostingVersion)" />
-        <PackageReference Include="Akka.Cluster.Sharding" Version="1.5.0-beta637860676757337829" />
+        <PackageReference Include="Akka.Cluster.Sharding" Version="1.5.0-beta*" />
         <PackageReference Include="Akka.Discovery" Version="$(AkkaVersion)" />
         <PackageReference Include="Akka.Discovery.KubernetesApi" Version="$(AkkaManagementVerison)" />
         <PackageReference Include="Akka.Coordination.KubernetesApi" Version="$(AkkaManagementVerison)" />
