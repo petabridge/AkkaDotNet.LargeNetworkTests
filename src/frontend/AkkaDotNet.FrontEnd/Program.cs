@@ -21,14 +21,17 @@ builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuil
         new[] { ActorSystemConstants.FrontendRole, ActorSystemConstants.DistributedPubSubRole });
     configurationBuilder.WithSerilog(akkaConfiguration.SerilogOptions);
     configurationBuilder.WithReadyCheckActors();
-    configurationBuilder.StartActors((system, registry) =>
+    if (akkaConfiguration.DistributedPubSubOptions.Enabled)
     {
-        var cluster = Akka.Cluster.Cluster.Get(system);
-        cluster.RegisterOnMemberUp(() =>
+        configurationBuilder.StartActors((system, registry) =>
         {
-            system.ActorOf(Props.Create(() => new PingerActor()), "pinger");
+            var cluster = Akka.Cluster.Cluster.Get(system);
+            cluster.RegisterOnMemberUp(() =>
+            {
+                system.ActorOf(Props.Create(() => new PingerActor()), "pinger");
+            });
         });
-    });
+    }
 });
 
 builder.Services.AddOpenTelemetry();

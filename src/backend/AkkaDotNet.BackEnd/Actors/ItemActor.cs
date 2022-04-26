@@ -13,17 +13,19 @@ namespace AkkaDotNet.BackEnd.Actors;
 public class ItemActor : ReceivePersistentActor
 {
     private int _count = 0;
+    private readonly bool _pubSubEnabled;
     private readonly ILoggingAdapter _log = Context.GetLogger();
 
-    public static Props PropsFor(string itemId)
+    public static Props PropsFor(string itemId, bool pubSubEnabled)
     {
-        return Props.Create(() => new ItemActor(itemId));
+        return Props.Create(() => new ItemActor(itemId, pubSubEnabled));
     }
 
-    public ItemActor(string persistenceId)
+    public ItemActor(string persistenceId, bool pubSubEnabled)
     {
         PersistenceId = persistenceId;
-        
+        _pubSubEnabled = pubSubEnabled;
+
         Recover<ItemAdded>(i =>
         {
             _log.Info("Recovery: count was {0} - adding {1}", _count, i.Count);
@@ -102,7 +104,10 @@ public class ItemActor : ReceivePersistentActor
     protected override void PreStart()
     {
         Context.SetReceiveTimeout(TimeSpan.FromMinutes(2));
-        var mediator = DistributedPubSub.Get(Context.System).Mediator;
-        mediator.Tell(new Subscribe(ActorSystemConstants.PingTopicName, Self), Self);
+        if (_pubSubEnabled)
+        {
+            var mediator = DistributedPubSub.Get(Context.System).Mediator;
+            mediator.Tell(new Subscribe(ActorSystemConstants.PingTopicName, Self), Self);
+        }
     }
 }
