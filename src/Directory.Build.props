@@ -2,10 +2,11 @@
   <PropertyGroup>
     <Copyright>Copyright © 2022 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.5.10</VersionPrefix>
+    <VersionPrefix>0.5.11</VersionPrefix>
     <PackageReleaseNotes>• Added DistributedPubSub • but made it optional
 • Disabled DistributedPubSub
 • Set state-store-mode=persistence
+• Hard code disable DData
 • Run with Akka.NET v1.5.0-beta</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>

@@ -1,3 +1,11 @@
+## [0.5.11] / 25 April 2022
+- Added `DistributedPubSub` - but made it optional
+- Disabled `DistributedPubSub`
+- Set `state-store-mode=persistence`
+- Hard code disable DData
+- Run with Akka.NET v1.5.0-beta
+
+
 ## [0.5.10] / 25 April 2022
 - Added `DistributedPubSub` - but made it optional
 - Disabled `DistributedPubSub`
