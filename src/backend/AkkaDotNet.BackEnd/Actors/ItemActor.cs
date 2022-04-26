@@ -1,6 +1,9 @@
 ﻿using Akka.Actor;
+using Akka.Cluster.Sharding;
+using Akka.Cluster.Tools.PublishSubscribe;
 using Akka.Event;
 using Akka.Persistence;
+using AkkaDotNet.Infrastructure;
 using AkkaDotNet.Messages;
 using AkkaDotNet.Messages.Commands;
 using AkkaDotNet.Messages.Events;
@@ -10,17 +13,19 @@ namespace AkkaDotNet.BackEnd.Actors;
 public class ItemActor : ReceivePersistentActor
 {
     private int _count = 0;
+    private readonly bool _pubSubEnabled;
     private readonly ILoggingAdapter _log = Context.GetLogger();
-    
-    public static Props PropsFor(string itemId)
+
+    public static Props PropsFor(string itemId, bool pubSubEnabled)
     {
-        return Props.Create(() => new ItemActor(itemId));
+        return Props.Create(() => new ItemActor(itemId, pubSubEnabled));
     }
 
-    public ItemActor(string persistenceId)
+    public ItemActor(string persistenceId, bool pubSubEnabled)
     {
         PersistenceId = persistenceId;
-        
+        _pubSubEnabled = pubSubEnabled;
+
         Recover<ItemAdded>(i =>
         {
             _log.Info("Recovery: count was {0} - adding {1}", _count, i.Count);
@@ -69,6 +74,21 @@ public class ItemActor : ReceivePersistentActor
             DeleteMessages(s.Metadata.SequenceNr);
             DeleteSnapshots(new SnapshotSelectionCriteria(s.Metadata.SequenceNr-1));
         });
+
+        Command<ReceiveTimeout>(_ =>
+        {
+            Context.Parent.Tell(new Passivate(PoisonPill.Instance));
+        });
+        
+        Command<SubscribeAck>(a =>
+        {
+            _log.Info("Confirmed subscription to [{0}]", a.Subscribe.Topic);
+        });
+
+        Command<Ping>(p =>
+        {
+            Sender.Tell(p);
+        });
     }
 
     private void SaveSnapshotWhenAble()
@@ -80,4 +100,14 @@ public class ItemActor : ReceivePersistentActor
     }
 
     public override string PersistenceId { get; }
+
+    protected override void PreStart()
+    {
+        Context.SetReceiveTimeout(TimeSpan.FromMinutes(2));
+        if (_pubSubEnabled)
+        {
+            var mediator = DistributedPubSub.Get(Context.System).Mediator;
+            mediator.Tell(new Subscribe(ActorSystemConstants.PingTopicName, Self), Self);
+        }
+    }
 }

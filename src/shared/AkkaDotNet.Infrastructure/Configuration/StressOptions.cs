@@ -44,6 +44,8 @@ public class AkkaClusterOptions
     public List<string>? Roles { get; set; } 
     public bool UseKubernetesDiscovery { get; set; } = false;
 
+    public bool UseKubernetesLease { get; set; } = false;
+
     public KubernetesDiscoveryOptions KubernetesDiscoveryOptions { get; set; } = new KubernetesDiscoveryOptions();
 
     /// <summary>
