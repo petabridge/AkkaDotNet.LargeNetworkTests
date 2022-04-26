@@ -16,6 +16,7 @@ data:
   StressOptions__DistributedPubSubOptions__Enabled: "false"
 
   # Sharding options
+  StressOptions__ShardingOptions__Enabled: "true"
   StressOptions__ShardingOptions__UseDData: "false"
 
   # configure Akka.Management K8s service discovery
