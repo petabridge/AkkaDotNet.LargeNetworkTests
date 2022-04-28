@@ -1,3 +1,4 @@
+using System;
 using Akka.Actor;
 using Akka.Cluster.Hosting;
 using Akka.Cluster.Sharding;
@@ -25,14 +26,17 @@ builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuil
         new[] { ActorSystemConstants.BackendRole, ActorSystemConstants.DistributedPubSubRole });
     configurationBuilder.WithSerilog(akkaConfiguration.SerilogOptions);
     configurationBuilder.WithReadyCheckActors();
-    configurationBuilder.WithShardRegion<IWithItem>("items", s => ItemActor.PropsFor(s), new ItemShardExtractor(),
-        new ShardOptions()
-        {
-            RememberEntities = false,
-            Role = ActorSystemConstants.BackendRole,
-            StateStoreMode = StateStoreMode.Persistence
-        })
-        .WithItemMessagingActor();
+    if (akkaConfiguration.ShardingOptions.Enabled)
+    {
+        configurationBuilder.WithShardRegion<IWithItem>("items", s => ItemActor.PropsFor(s, akkaConfiguration.DistributedPubSubOptions.Enabled), new ItemShardExtractor(),
+                new ShardOptions()
+                {
+                    RememberEntities = akkaConfiguration.ShardingOptions.RememberEntities,
+                    Role = ActorSystemConstants.BackendRole,
+                    StateStoreMode = akkaConfiguration.ShardingOptions.UseDData ? StateStoreMode.DData : StateStoreMode.Persistence
+                })
+            .WithItemMessagingActor();
+    }
 });
 
 builder.Services.AddOpenTelemetry();
