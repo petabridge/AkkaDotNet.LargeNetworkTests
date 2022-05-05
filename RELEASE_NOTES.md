@@ -1,3 +1,7 @@
+## [0.7.1] / 05 May 2022
+- Running on .NET Core 3.1 version of the software (i.e. all code changes needed to make app .NET Core 3.1-compliant,) but .NET 6 runtime
+- Disabling `DistributedPubSub`
+
 ## [0.7.0] / 05 May 2022
 - Running on .NET Core 3.1 version of the software (i.e. all code changes needed to make app .NET Core 3.1-compliant,) but .NET 6 runtime
 

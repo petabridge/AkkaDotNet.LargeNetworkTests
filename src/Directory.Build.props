@@ -2,8 +2,9 @@
   <PropertyGroup>
     <Copyright>Copyright © 2022 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.7.0</VersionPrefix>
-    <PackageReleaseNotes>• Running on .NET Core 3.1 version of the software (i.e. all code changes needed to make app .NET Core 3.1-compliant%2C) but .NET 6 runtime</PackageReleaseNotes>
+    <VersionPrefix>0.7.1</VersionPrefix>
+    <PackageReleaseNotes>• Running on .NET Core 3.1 version of the software (i.e. all code changes needed to make app .NET Core 3.1-compliant%2C) but .NET 6 runtime
+• Disabling DistributedPubSub</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
     <PackageProjectUrl>
