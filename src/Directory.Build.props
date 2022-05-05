@@ -2,9 +2,10 @@
   <PropertyGroup>
     <Copyright>Copyright © 2022 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.6.1</VersionPrefix>
+    <VersionPrefix>0.6.2</VersionPrefix>
     <PackageReleaseNotes>• Migrated to .NET Core 3.1 for comparison purposes
-• Fixed bug with /ready checks always returning HTTP 500</PackageReleaseNotes>
+• Fixed bug with /ready checks always returning HTTP 500
+• Upgraded to Akka.Management 0.2.4-beta3</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
     <PackageProjectUrl>
@@ -24,7 +25,7 @@
     <AkkaVersion>1.4.37</AkkaVersion>
     <PbmVersion>1.0.2</PbmVersion>
     <AkkaHostingVersion>0.2.2</AkkaHostingVersion>
-    <AkkaManagementVerison>0.2.4-beta2</AkkaManagementVerison>
+    <AkkaManagementVerison>0.2.4-beta3</AkkaManagementVerison>
     <FluentAssertionsVersion>6.6.0</FluentAssertionsVersion>
     <OTelVersion>1.2.0-rc5</OTelVersion>
     <OTelInstrumentationVersion>1.0.0-rc9.2</OTelInstrumentationVersion>

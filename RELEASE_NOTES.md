@@ -1,3 +1,8 @@
+## [0.6.2] / 05 May 2022
+- Migrated to .NET Core 3.1 for comparison purposes
+- Fixed bug with `/ready` checks always returning HTTP 500
+- Upgraded to Akka.Management 0.2.4-beta3
+
 ## [0.6.1] / 05 May 2022
 - Migrated to .NET Core 3.1 for comparison purposes
 - Fixed bug with `/ready` checks always returning HTTP 500
