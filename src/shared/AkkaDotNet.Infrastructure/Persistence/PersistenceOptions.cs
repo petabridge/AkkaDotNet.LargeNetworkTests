@@ -1,8 +1,9 @@
-﻿namespace AkkaDotNet.Infrastructure.Persistence;
-
-public class PersistenceOptions
+﻿namespace AkkaDotNet.Infrastructure.Persistence
 {
-    public bool Enabled { get; set; } = false;
+    public class PersistenceOptions
+    {
+        public bool Enabled { get; set; } = false;
 
-    public string AzureStorageConnectionString { get; set; } = string.Empty;
+        public string AzureStorageConnectionString { get; set; } = string.Empty;
+    }
 }

@@ -1,7 +1,9 @@
-﻿namespace AkkaDotNet.Messages.Commands;
-
-public sealed class Ping
+﻿namespace AkkaDotNet.Messages.Commands
 {
-    public static readonly Ping Instance = new Ping();
-    private Ping(){}
+    public sealed class Ping
+    {
+        public static readonly Ping Instance = new Ping();
+        private Ping(){}
+    }
 }
+

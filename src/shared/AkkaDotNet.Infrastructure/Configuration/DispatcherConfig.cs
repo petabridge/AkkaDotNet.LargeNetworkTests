@@ -1,8 +1,10 @@
-﻿namespace AkkaDotNet.Infrastructure.Configuration;
-
-public enum DispatcherConfig
+﻿namespace AkkaDotNet.Infrastructure.Configuration
 {
-    Defaults,
-    ChannelExecutor64,
-    DedicatedThreadpool32x16,
+    
+    public enum DispatcherConfig
+    {
+        Defaults,
+        ChannelExecutor64,
+        DedicatedThreadpool32x16,
+    }
 }

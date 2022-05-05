@@ -2,13 +2,13 @@
 using Akka.Hosting;
 using Akka.Persistence.Azure;
 
-namespace AkkaDotNet.Infrastructure.Persistence;
-
-public static class PersistenceHostingExtensions
+namespace AkkaDotNet.Infrastructure.Persistence
 {
-    public static Config GetPersistenceHocon(string connectionString)
+    public static class PersistenceHostingExtensions
     {
-        return $@"
+        public static Config GetPersistenceHocon(string connectionString)
+        {
+            return $@"
             akka.persistence {{
                 journal {{
                     plugin = ""akka.persistence.journal.azure-table""
@@ -25,18 +25,20 @@ public static class PersistenceHostingExtensions
                     }}
                 }}
             }}";
-    }
-    
-    public static AkkaConfigurationBuilder AddPersistence(this AkkaConfigurationBuilder configurationBuilder,
-        PersistenceOptions options)
-    {
-        if (options.Enabled)
-        {
-            var persistenceHocon = GetPersistenceHocon(options.AzureStorageConnectionString)
-                .WithFallback(AzurePersistence.DefaultConfig);
-            configurationBuilder.AddHocon(persistenceHocon, HoconAddMode.Prepend);
         }
+    
+        public static AkkaConfigurationBuilder AddPersistence(this AkkaConfigurationBuilder configurationBuilder,
+            PersistenceOptions options)
+        {
+            if (options.Enabled)
+            {
+                var persistenceHocon = GetPersistenceHocon(options.AzureStorageConnectionString)
+                    .WithFallback(AzurePersistence.DefaultConfig);
+                configurationBuilder.AddHocon(persistenceHocon, HoconAddMode.Prepend);
+            }
 
-        return configurationBuilder;
+            return configurationBuilder;
+        }
     }
 }
+

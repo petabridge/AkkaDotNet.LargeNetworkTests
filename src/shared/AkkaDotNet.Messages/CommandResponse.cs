@@ -1,12 +1,24 @@
 ﻿using AkkaDotNet.Messages.Commands;
 
-namespace AkkaDotNet.Messages;
-
-public enum CommandResult
+namespace AkkaDotNet.Messages
 {
-    Ok,
-    Fail,
-    Timeout
+    public enum CommandResult
+    {
+        Ok,
+        Fail,
+        Timeout
+    }
+
+    public sealed class CommandResponse
+    {
+        public IItemCommand Command { get; }
+        public CommandResult Result { get; }
+
+        public CommandResponse(IItemCommand command, CommandResult result)
+        {
+            Command = command;
+            Result = result;
+        }
+    }
 }
 
-public sealed record CommandResponse(IItemCommand Command, CommandResult Result);

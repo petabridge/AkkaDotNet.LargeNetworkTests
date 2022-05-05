@@ -1,22 +1,24 @@
 ﻿using Akka.Cluster.Sharding;
 using AkkaDotNet.Messages;
 
-namespace AkkaDotNet.Infrastructure.Sharding;
-
-public class ItemShardExtractor : HashCodeMessageExtractor
+namespace AkkaDotNet.Infrastructure.Sharding
 {
-    // 200 nodes, 10 shards per node
-    public ItemShardExtractor() : base(2000)
+    
+    public class ItemShardExtractor : HashCodeMessageExtractor
     {
-    }
-
-    public override string? EntityId(object message)
-    {
-        if (message is IWithItem itemId)
+        // 200 nodes, 10 shards per node
+        public ItemShardExtractor() : base(2000)
         {
-            return itemId.ItemId;
         }
 
-        return null;
+        public override string? EntityId(object message)
+        {
+            if (message is IWithItem itemId)
+            {
+                return itemId.ItemId;
+            }
+
+            return null;
+        }
     }
 }

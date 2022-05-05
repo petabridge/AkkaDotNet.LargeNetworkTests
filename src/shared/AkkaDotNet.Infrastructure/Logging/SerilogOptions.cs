@@ -1,8 +1,9 @@
-﻿namespace AkkaDotNet.Infrastructure.Logging;
-
-public class SerilogOptions
+﻿namespace AkkaDotNet.Infrastructure.Logging
 {
-    public bool EnableSeq { get; set; } = false;
-    public string? SeqHost { get; set; }
-    public int? SeqPort { get; set; }
+    public class SerilogOptions
+    {
+        public bool EnableSeq { get; set; } = false;
+        public string? SeqHost { get; set; }
+        public int? SeqPort { get; set; }
+    }
 }

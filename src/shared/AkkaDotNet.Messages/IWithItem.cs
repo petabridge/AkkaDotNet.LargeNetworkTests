@@ -1,6 +1,8 @@
-﻿namespace AkkaDotNet.Messages;
-
-public interface IWithItem
+﻿namespace AkkaDotNet.Messages
 {
-    string ItemId { get; }
+    public interface IWithItem
+    {
+        string ItemId { get; }
+    }
 }
+

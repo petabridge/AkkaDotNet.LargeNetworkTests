@@ -1,39 +1,40 @@
 ﻿using Akka.Actor;
 using Akka.Cluster;
 
-namespace AkkaDotNet.Infrastructure.Actors;
-
-public sealed class ReadyCheck
+namespace AkkaDotNet.Infrastructure.Actors
 {
-    public static readonly ReadyCheck Instance = new ReadyCheck();
-    private ReadyCheck(){}
-}
-
-public sealed class ReadyResult
-{
-    public ReadyResult(bool isReady)
+    public sealed class ReadyCheck
     {
-        IsReady = isReady;
+        public static readonly ReadyCheck Instance = new ReadyCheck();
+        private ReadyCheck(){}
     }
 
-    public bool IsReady { get; }
-}
-
-/// <summary>
-/// Responsible for processing health-check pings from /ready endpoint.
-///
-/// Also used for generating message traffic, optionally, when configured to do so.
-/// </summary>
-public sealed class ReadyCheckActor : ReceiveActor
-{
-    private readonly Cluster _cluster = Cluster.Get(Context.System);
-    
-    public ReadyCheckActor()
+    public sealed class ReadyResult
     {
-        Receive<ReadyCheck>(r =>
+        public ReadyResult(bool isReady)
         {
-            var isReady = _cluster.SelfMember.Status == MemberStatus.Up && !_cluster.IsTerminated;
-            Sender.Tell(new ReadyResult(isReady));
-        });
+            IsReady = isReady;
+        }
+
+        public bool IsReady { get; }
+    }
+
+    /// <summary>
+    /// Responsible for processing health-check pings from /ready endpoint.
+    ///
+    /// Also used for generating message traffic, optionally, when configured to do so.
+    /// </summary>
+    public sealed class ReadyCheckActor : ReceiveActor
+    {
+        private readonly Cluster _cluster = Cluster.Get(Context.System);
+    
+        public ReadyCheckActor()
+        {
+            Receive<ReadyCheck>(r =>
+            {
+                var isReady = _cluster.SelfMember.Status == MemberStatus.Up && !_cluster.IsTerminated;
+                Sender.Tell(new ReadyResult(isReady));
+            });
+        }
     }
 }
