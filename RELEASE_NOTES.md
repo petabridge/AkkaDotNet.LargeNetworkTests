@@ -1,3 +1,6 @@
+## [0.7.0] / 05 May 2022
+- Running on .NET Core 3.1 version of the software (i.e. all code changes needed to make app .NET Core 3.1-compliant,) but .NET 6 runtime
+
 ## [0.6.2] / 05 May 2022
 - Migrated to .NET Core 3.1 for comparison purposes
 - Fixed bug with `/ready` checks always returning HTTP 500

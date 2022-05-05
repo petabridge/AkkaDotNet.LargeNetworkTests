@@ -78,7 +78,7 @@ spec:
         emptyDir: {}
       containers:
       - name: frontend
-        image: akkalargescaleimages64b06635.azurecr.io/akkadotnet.frontend:0.6.2
+        image: akkalargescaleimages64b06635.azurecr.io/akkadotnet.frontend:0.7.0
         env:
         - name: POD_NAME
           valueFrom:
@@ -207,7 +207,7 @@ spec:
         emptyDir: {}
       containers:
       - name: backend
-        image: akkalargescaleimages64b06635.azurecr.io/akkadotnet.backend:0.6.2
+        image: akkalargescaleimages64b06635.azurecr.io/akkadotnet.backend:0.7.0
         env:
         - name: POD_NAME
           valueFrom:

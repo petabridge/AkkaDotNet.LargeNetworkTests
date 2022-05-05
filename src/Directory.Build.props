@@ -2,10 +2,8 @@
   <PropertyGroup>
     <Copyright>Copyright © 2022 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.6.2</VersionPrefix>
-    <PackageReleaseNotes>• Migrated to .NET Core 3.1 for comparison purposes
-• Fixed bug with /ready checks always returning HTTP 500
-• Upgraded to Akka.Management 0.2.4-beta3</PackageReleaseNotes>
+    <VersionPrefix>0.7.0</VersionPrefix>
+    <PackageReleaseNotes>• Running on .NET Core 3.1 version of the software (i.e. all code changes needed to make app .NET Core 3.1-compliant%2C) but .NET 6 runtime</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
     <PackageProjectUrl>
@@ -18,7 +16,7 @@
 		<None Include="$(MSBuildThisFileDirectory)\..\README.md" Pack="true" Visible="false" PackagePath="\" />
 	</ItemGroup>
   <PropertyGroup>
-    <NetCoreFramework>netcoreapp3.1</NetCoreFramework>
+    <NetCoreFramework>net6.0</NetCoreFramework>
     <NBenchVersion>1.2.2</NBenchVersion>
     <XunitVersion>2.4.1</XunitVersion>
     <TestSdkVersion>17.1.0</TestSdkVersion>
