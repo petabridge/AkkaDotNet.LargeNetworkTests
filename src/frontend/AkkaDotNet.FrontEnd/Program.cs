@@ -73,7 +73,7 @@ namespace AkkaDotNet.FrontEnd
                                 var checkResult = await readyCheck.Ask<ReadyResult>(ReadyCheck.Instance, TimeSpan.FromSeconds(3));
                                 //if (checkResult.IsReady)
                                 req.Response.StatusCode = 200;
-                                req.Response.StatusCode = 500;
+                                //req.Response.StatusCode = 500;
                             });
                         });
 

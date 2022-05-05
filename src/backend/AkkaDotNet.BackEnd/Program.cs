@@ -14,7 +14,6 @@ using AkkaDotNet.Infrastructure.Sharding;
 using AkkaDotNet.Messages;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -80,7 +79,7 @@ namespace AkkaDotNet.BackEnd
                                     await readyCheck.Ask<ReadyResult>(ReadyCheck.Instance, TimeSpan.FromSeconds(3));
                                 //if (checkResult.IsReady)
                                 req.Response.StatusCode = 200;
-                                req.Response.StatusCode = 500;
+                                //req.Response.StatusCode = 500;
                             });
                         });
                     });

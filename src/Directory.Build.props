@@ -2,8 +2,9 @@
   <PropertyGroup>
     <Copyright>Copyright © 2022 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.6.0</VersionPrefix>
-    <PackageReleaseNotes>• Migrated to .NET Core 3.1 for comparison purposes</PackageReleaseNotes>
+    <VersionPrefix>0.6.1</VersionPrefix>
+    <PackageReleaseNotes>• Migrated to .NET Core 3.1 for comparison purposes
+• Fixed bug with /ready checks always returning HTTP 500</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
     <PackageProjectUrl>

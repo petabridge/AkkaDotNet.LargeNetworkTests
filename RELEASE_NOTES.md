@@ -1,3 +1,7 @@
+## [0.6.1] / 05 May 2022
+- Migrated to .NET Core 3.1 for comparison purposes
+- Fixed bug with `/ready` checks always returning HTTP 500
+
 ## [0.6.0] / 05 May 2022
 - Migrated to .NET Core 3.1 for comparison purposes
 

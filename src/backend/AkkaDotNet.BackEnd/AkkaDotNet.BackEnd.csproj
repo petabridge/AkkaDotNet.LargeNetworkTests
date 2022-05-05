@@ -6,12 +6,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\shared\AkkaDotNet.Infrastructure\AkkaDotNet.Infrastructure.csproj" />
-      <ProjectReference Include="..\..\shared\AkkaDotNet.Messages\AkkaDotNet.Messages.csproj" />
+        <ProjectReference Include="..\..\shared\AkkaDotNet.Infrastructure\AkkaDotNet.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\shared\AkkaDotNet.Messages\AkkaDotNet.Messages.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Serilog.Extensions.Hosting" Version="4.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1"/>
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="4.2.0"/>
     </ItemGroup>
 
 </Project>
