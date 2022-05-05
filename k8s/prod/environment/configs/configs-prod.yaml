@@ -13,7 +13,7 @@ data:
   StressOptions__AkkaClusterOptions__UseKubernetesLease: "false"
 
   # DistributedPubSub options
-  StressOptions__DistributedPubSubOptions__Enabled: "false"
+  StressOptions__DistributedPubSubOptions__Enabled: "true"
 
   # Sharding options
   StressOptions__ShardingOptions__Enabled: "true"
