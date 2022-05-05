@@ -1,4 +1,5 @@
-﻿using Akka.Actor;
+﻿using System;
+using Akka.Actor;
 using Akka.Event;
 using Akka.Util;
 using AkkaDotNet.Messages;
@@ -13,7 +14,7 @@ namespace AkkaDotNet.Infrastructure.Actors
         private readonly ILoggingAdapter _log = Context.GetLogger();
         private sealed class WriteShard
         {
-            public static readonly WriteShard Instance = new();
+            public static readonly WriteShard Instance = new WriteShard();
             private WriteShard(){}
         }
     

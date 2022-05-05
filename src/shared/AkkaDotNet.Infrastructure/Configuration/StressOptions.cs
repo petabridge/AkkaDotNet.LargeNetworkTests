@@ -1,4 +1,5 @@
-﻿using AkkaDotNet.Infrastructure.Logging;
+﻿using System.Collections.Generic;
+using AkkaDotNet.Infrastructure.Logging;
 using AkkaDotNet.Infrastructure.Persistence;
 
 namespace AkkaDotNet.Infrastructure.Configuration

@@ -1,3 +1,6 @@
+## [0.6.0] / 05 May 2022
+- Migrated to .NET Core 3.1 for comparison purposes
+
 ## [0.5.12] / 25 April 2022
 - Added `DistributedPubSub` - but made it optional
 - Disabled `DistributedPubSub`
