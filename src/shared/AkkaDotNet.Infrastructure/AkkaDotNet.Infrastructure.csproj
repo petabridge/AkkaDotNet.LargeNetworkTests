@@ -14,7 +14,7 @@
         <PackageReference Include="Akka.Coordination.KubernetesApi" Version="$(AkkaManagementVerison)" />
         <PackageReference Include="Akka.Logger.Serilog" Version="1.4.26" />
         <PackageReference Include="Akka.Management.Cluster.Bootstrap" Version="$(AkkaManagementVerison)" />
-        <PackageReference Include="Akka.Persistence.Azure" Version="0.8.3" />
+        <PackageReference Include="Akka.Persistence.Azure" Version="0.8.4" />
         <PackageReference Include="Petabridge.Cmd.Cluster" Version="$(PbmVersion)" />
         <PackageReference Include="Petabridge.Cmd.Cluster.Sharding" Version="$(PbmVersion)" />
         <PackageReference Include="Petabridge.Cmd.Remote" Version="$(PbmVersion)" />
