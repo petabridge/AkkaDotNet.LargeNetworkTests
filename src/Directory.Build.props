@@ -26,7 +26,7 @@
     <XunitVersion>2.4.1</XunitVersion>
     <TestSdkVersion>17.1.0</TestSdkVersion>
     <AkkaVersion>1.4.38</AkkaVersion>
-    <PbmVersion>1.0.2</PbmVersion>
+    <PbmVersion>1.1.0</PbmVersion>
     <AkkaHostingVersion>0.3.0</AkkaHostingVersion>
     <AkkaManagementVerison>0.2.4-beta3</AkkaManagementVerison>
     <FluentAssertionsVersion>6.6.0</FluentAssertionsVersion>
