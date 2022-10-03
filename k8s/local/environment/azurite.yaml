@@ -4,9 +4,12 @@ metadata:
   name: azurite
 spec:
   ports:
-  - port: 10000
-  - port: 10001
-  - port: 10002
+    - port: 10000
+      name: blob
+    - port: 10001
+      name: table
+    - port: 10002
+      name: queue
   selector:
     app: azurite
 ---
@@ -41,5 +44,4 @@ metadata:
   name: azure-connection-string
 type: Opaque
 data:
-  AzureConnectionString: VXNlRGV2ZWxvcG1lbnRTdG9yYWdlPXRydWU7RGV2ZWxvcG1lbnRTdG9yYWdlUHJveHlVcmk9aHR0
-cDovL2F6dXJpdGU=
+  AzureConnectionString: VXNlRGV2ZWxvcG1lbnRTdG9yYWdlPXRydWU7RGV2ZWxvcG1lbnRTdG9yYWdlUHJveHlVcmk9aHR0cDovL2F6dXJpdGU=

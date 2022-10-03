@@ -78,7 +78,7 @@ spec:
         emptyDir: {}
       containers:
       - name: frontend
-        image: akkadotnet.frontend:0.5.9
+        image: akkadotnet.frontend:0.6.0
         env:
         - name: POD_NAME
           valueFrom:
@@ -86,8 +86,6 @@ spec:
               fieldPath: metadata.name
         - name: StressOptions__AkkaClusterOptions__Hostname
           value: "$(POD_NAME).frontend-akka"
-        - name: ShardingOptions__UseDData
-          value: "false"
         - name: DOTNET_DiagnosticPorts
           value: /diag/port
         envFrom:
@@ -209,7 +207,7 @@ spec:
         emptyDir: {}
       containers:
       - name: backend
-        image: akkadotnet.backend:0.5.9
+        image: akkadotnet.backend:0.6.0
         env:
         - name: POD_NAME
           valueFrom:
@@ -217,8 +215,19 @@ spec:
               fieldPath: metadata.name
         - name: StressOptions__AkkaClusterOptions__Hostname
           value: "$(POD_NAME).backend-akka"
+        - name: ShardingOptions__UseDData
+          value: "false"
+        - name: ShardingOptions__RememberEntities
+          value: "true"
+        - name: StressOptions__DispatcherConfig
+          value: "Defaults"
         - name: DOTNET_DiagnosticPorts
           value: /diag/port
+        - name: StressOptions__PersistenceOptions__AzureStorageConnectionString
+          valueFrom:
+            secretKeyRef:
+              name: azure-connection-string
+              key: AzureConnectionString
         envFrom:
         - configMapRef:
             name: stress-configs
