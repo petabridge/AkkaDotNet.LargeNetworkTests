@@ -86,6 +86,8 @@ spec:
               fieldPath: metadata.name
         - name: StressOptions__AkkaClusterOptions__Hostname
           value: "$(POD_NAME).frontend-akka"
+        - name: ShardingOptions__UseDData
+          value: "false"
         - name: DOTNET_DiagnosticPorts
           value: /diag/port
         envFrom:
