@@ -1,8 +1,3 @@
-## [0.6.1] / 03 October 2022
-- Added local Akka.Persistence
-- Upgraded to Akka.NET v1.4.43
-- Updated `appsettings.json` to hard-code Akka.Persistence
-
 ## [0.6.0] / 03 October 2022
 - Added local Akka.Persistence
 - Upgraded to Akka.NET v1.4.43

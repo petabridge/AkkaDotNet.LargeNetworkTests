@@ -18,7 +18,7 @@ using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables();
 
-builder.Logging.ClearProviders().AddConsole().AddSerilog().AddFilter(null, LogLevel.Debug);
+builder.Logging.ClearProviders().AddConsole().AddSerilog().AddFilter(null, LogLevel.Warning);
 
 var akkaConfiguration = builder.Configuration.GetRequiredSection(nameof(StressOptions)).Get<StressOptions>();
 
@@ -43,7 +43,7 @@ builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuil
                 })
             .WithItemMessagingActor();
     }
-    configurationBuilder.AddHoconFile("sharding-upgrade.conf");
+    //configurationBuilder.AddHoconFile("sharding-upgrade.conf");
 });
 
 builder.Services.AddOpenTelemetry();
