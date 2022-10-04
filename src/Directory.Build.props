@@ -2,9 +2,9 @@
   <PropertyGroup>
     <Copyright>Copyright © 2022 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.6.0</VersionPrefix>
-    <PackageReleaseNotes>• Added local Akka.Persistence
-• Upgraded to Akka.NET v1.4.43</PackageReleaseNotes>
+    <VersionPrefix>0.6.3</VersionPrefix>
+    <PackageReleaseNotes>• Upgraded to Akka.NET v1.5.0-beta1
+• Migrated to DData</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
     <PackageProjectUrl>
@@ -18,13 +18,12 @@
 	</ItemGroup>
   <PropertyGroup>
     <NetCoreFramework>net6.0</NetCoreFramework>
-    <NBenchVersion>1.2.2</NBenchVersion>
     <XunitVersion>2.4.1</XunitVersion>
     <TestSdkVersion>17.1.0</TestSdkVersion>
     <AkkaVersion>1.4.43</AkkaVersion>
-    <PbmVersion>1.0.2</PbmVersion>
+    <PbmVersion>1.1.2</PbmVersion>
     <AkkaHostingVersion>0.4.3</AkkaHostingVersion>
-    <AkkaManagementVerison>0.2.4-beta3</AkkaManagementVerison>
+    <AkkaManagementVerison>0.2.5-beta4</AkkaManagementVerison>
     <FluentAssertionsVersion>6.6.0</FluentAssertionsVersion>
     <OTelVersion>1.2.0-rc5</OTelVersion>
     <OTelInstrumentationVersion>1.0.0-rc9.2</OTelInstrumentationVersion>
