@@ -15,4 +15,11 @@
       <PackageReference Include="Serilog.Extensions.Hosting" Version="4.2.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="sharding-upgrade.conf" />
+      <Content Include="sharding-upgrade.conf">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>

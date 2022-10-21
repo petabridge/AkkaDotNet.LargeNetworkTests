@@ -2,13 +2,9 @@
   <PropertyGroup>
     <Copyright>Copyright © 2022 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.5.12</VersionPrefix>
-    <PackageReleaseNotes>• Added DistributedPubSub • but made it optional
-• Disabled DistributedPubSub
-• Set state-store-mode=persistence
-• Hard code disable DData
-• Actually use ShardOptions
-• Run with Akka.NET v1.5.0-beta</PackageReleaseNotes>
+    <VersionPrefix>0.6.0</VersionPrefix>
+    <PackageReleaseNotes>• Added local Akka.Persistence
+• Upgraded to Akka.NET v1.4.43</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
     <PackageProjectUrl>
@@ -22,13 +18,12 @@
 	</ItemGroup>
   <PropertyGroup>
     <NetCoreFramework>net6.0</NetCoreFramework>
-    <NBenchVersion>1.2.2</NBenchVersion>
-    <XunitVersion>2.4.1</XunitVersion>
+    <XunitVersion>2.4.2</XunitVersion>
     <TestSdkVersion>17.1.0</TestSdkVersion>
-    <AkkaVersion>1.4.38</AkkaVersion>
-    <PbmVersion>1.0.2</PbmVersion>
-    <AkkaHostingVersion>0.3.0</AkkaHostingVersion>
-    <AkkaManagementVerison>0.2.4-beta3</AkkaManagementVerison>
+    <AkkaVersion>1.4.45</AkkaVersion>
+    <PbmVersion>1.1.3</PbmVersion>
+    <AkkaHostingVersion>0.5.1</AkkaHostingVersion>
+    <AkkaManagementVerison>0.3.0-beta2</AkkaManagementVerison>
     <FluentAssertionsVersion>6.6.0</FluentAssertionsVersion>
     <OTelVersion>1.2.0-rc5</OTelVersion>
     <OTelInstrumentationVersion>1.0.0-rc9.2</OTelInstrumentationVersion>

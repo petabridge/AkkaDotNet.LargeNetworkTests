@@ -1,3 +1,7 @@
+## [0.6.0] / 03 October 2022
+- Added local Akka.Persistence
+- Upgraded to Akka.NET v1.4.43
+
 ## [0.5.12] / 25 April 2022
 - Added `DistributedPubSub` - but made it optional
 - Disabled `DistributedPubSub`
