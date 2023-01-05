@@ -21,3 +21,5 @@ data:
   StressOptions__SerilogOptions__EnableSeq: "true"
   StressOptions__SerilogOptions__SeqHost: "seq"
   StressOptions__SerilogOptions__SeqPort: "8988"
+
+  StressOptions__DispatcherConfig: "Defaults"

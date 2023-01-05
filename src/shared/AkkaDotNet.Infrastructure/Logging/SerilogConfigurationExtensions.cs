@@ -52,7 +52,7 @@ public static class SerilogConfigurationExtensions
         Log.Logger = loggerConfiguration.CreateLogger();
         
         // add to Akka.NET
-        return builder.AddHocon(SerilogConfig);
+        return builder.AddHocon(SerilogConfig, HoconAddMode.Append);
     }
     
     /// <summary>

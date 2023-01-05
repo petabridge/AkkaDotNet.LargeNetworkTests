@@ -115,7 +115,7 @@ class MyStack : Stack
             },
             DnsPrefix = "akkastress",
             EnableRBAC = true,
-            KubernetesVersion = "1.22.6",
+            KubernetesVersion = "1.24.3",
             LinuxProfile = new ContainerServiceLinuxProfileArgs
             {
                 AdminUsername = "testuser",

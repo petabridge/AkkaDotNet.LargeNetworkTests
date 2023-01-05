@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Akka.Actor;
 using Akka.Cluster.Hosting;
 using Akka.Configuration;
@@ -171,7 +173,7 @@ public static class StressHostingExtensions
                 .WithFallback(ClusterBootstrap.DefaultConfiguration())
                 .WithFallback(AkkaManagementProvider.DefaultConfiguration());
             
-            builder.AddHocon(bootstrapConfig).WithActors(async (system, registry) =>
+            builder.AddHocon(bootstrapConfig, HoconAddMode.Prepend).WithActors(async (system, registry) =>
             {
                 // Akka Management hosts the HTTP routes used by bootstrap
                 await AkkaManagement.Get(system).Start();
@@ -184,7 +186,7 @@ public static class StressHostingExtensions
         {
             // not using K8s discovery - need to populate some seed nodes
             if (options.AkkaClusterOptions.SeedNodes != null)
-                clusterOptions.SeedNodes = options.AkkaClusterOptions.SeedNodes.Select(c => Address.Parse(c)).ToArray();
+                clusterOptions.SeedNodes = options.AkkaClusterOptions.SeedNodes.ToArray();
         }
 
         switch (options.DispatcherConfig)
@@ -199,9 +201,9 @@ public static class StressHostingExtensions
 
         Debug.Assert(options.AkkaClusterOptions.Port != null, "options.Port != null");
         builder = builder
-            .AddHocon(options.AkkaClusterOptions.UseKubernetesLease ? K8sLeaseSbrConfig : DefaultSbrConfig) // need to add SBR 
-            .AddHocon(MaxFrameSize)
-            .WithRemoting(options.AkkaClusterOptions.Hostname, options.AkkaClusterOptions.Port.Value)
+            .AddHocon(options.AkkaClusterOptions.UseKubernetesLease ? K8sLeaseSbrConfig : DefaultSbrConfig, HoconAddMode.Prepend) // need to add SBR 
+            .AddHocon(MaxFrameSize, HoconAddMode.Prepend)
+            .WithRemoting("0.0.0.0", options.AkkaClusterOptions.Port.Value, options.AkkaClusterOptions.Hostname)
             .WithClustering(clusterOptions)
             .AddPersistence(options.PersistenceOptions)
             .WithPhobos(AkkaRunMode.AkkaCluster, configBuilder =>

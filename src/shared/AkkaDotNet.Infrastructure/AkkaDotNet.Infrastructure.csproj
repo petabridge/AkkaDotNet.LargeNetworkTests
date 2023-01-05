@@ -7,12 +7,12 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="Akka.Cluster.Hosting" Version="$(AkkaHostingVersion)" />
-        <PackageReference Include="Akka.Cluster.Sharding" Version="1.5.0-beta*" />
-        <PackageReference Include="Akka.Discovery" Version="$(AkkaVersion)" />
+        <PackageReference Include="Akka.Cluster.Hosting" Version="1.0.0" />
+        <PackageReference Include="Akka.Cluster.Sharding" Version="1.5.0-alpha3" />
+        <PackageReference Include="Akka.Discovery" Version="1.4.48" />
         <PackageReference Include="Akka.Discovery.KubernetesApi" Version="$(AkkaManagementVerison)" />
         <PackageReference Include="Akka.Coordination.KubernetesApi" Version="$(AkkaManagementVerison)" />
-        <PackageReference Include="Akka.Logger.Serilog" Version="1.4.26" />
+        <PackageReference Include="Akka.Logger.Serilog" Version="1.4.42" />
         <PackageReference Include="Akka.Management.Cluster.Bootstrap" Version="$(AkkaManagementVerison)" />
         <PackageReference Include="Akka.Persistence.Azure" Version="0.8.3" />
         <PackageReference Include="Petabridge.Cmd.Cluster" Version="$(PbmVersion)" />
@@ -25,7 +25,7 @@
         <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="$(OTelInstrumentationVersion)" />
         <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="$(OTelVersion)" />
         <PackageReference Include="OpenTelemetry.Exporter.Prometheus" Version="$(OTelVersion)" />
-        <PackageReference Include="Phobos.Hosting" Version="2.0.2" />
+        <PackageReference Include="Phobos.Hosting" Version="2.1.0-beta2" />
     </ItemGroup>
     
     <ItemGroup>

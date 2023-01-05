@@ -1,3 +1,6 @@
+## [0.6.0] / 14 December 2022
+- Upgraded all dependencies
+
 ## [0.5.12] / 25 April 2022
 - Added `DistributedPubSub` - but made it optional
 - Disabled `DistributedPubSub`
