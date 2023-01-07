@@ -5,6 +5,7 @@ using Akka.Actor;
 using Akka.Cluster.Hosting;
 using Akka.Configuration;
 using Akka.Coordination.KubernetesApi;
+using Akka.Discovery.KubernetesApi;
 using Akka.Hosting;
 using Akka.Management;
 using Akka.Management.Cluster.Bootstrap;
@@ -163,23 +164,30 @@ public static class StressHostingExtensions
         }
     ").WithFallback(KubernetesLease.DefaultConfiguration);
     
-    public static AkkaConfigurationBuilder WithClusterBootstrap(this AkkaConfigurationBuilder builder, StressOptions options, IEnumerable<string> roles)
+    public static AkkaConfigurationBuilder WithStressCluster(this AkkaConfigurationBuilder builder, StressOptions options, IEnumerable<string> roles)
     {
         var clusterOptions = new ClusterOptions() { Roles = roles.ToArray() };
 
         if (options.AkkaClusterOptions.UseKubernetesDiscovery)
         {
-            var bootstrapConfig = CreateDiscoveryConfig(options.AkkaClusterOptions)
-                .WithFallback(ClusterBootstrap.DefaultConfiguration())
-                .WithFallback(AkkaManagementProvider.DefaultConfiguration());
-            
-            builder.AddHocon(bootstrapConfig, HoconAddMode.Prepend).WithActors(async (system, registry) =>
+            // Add Akka.Management support
+            builder.WithAkkaManagement(setup =>
             {
-                // Akka Management hosts the HTTP routes used by bootstrap
-                await AkkaManagement.Get(system).Start();
-
-                // Starting the bootstrap process needs to be done explicitly
-                await ClusterBootstrap.Get(system).Start();
+                setup.Http.Port = options.AkkaClusterOptions.ManagementPort;
+            });
+            
+            // Add Akka.Management.Cluster.Bootstrap support
+            builder.WithClusterBootstrap(setup =>
+            {
+                setup.ContactPointDiscovery.PortName = "management";
+                setup.ContactPointDiscovery.RequiredContactPointsNr = 3;
+            }, autoStart: true);
+            
+            // Add Akka.Discovery.KubernetesApi support
+            builder.WithKubernetesDiscovery(c =>
+            {
+                c.PodNamespace = options.AkkaClusterOptions.KubernetesDiscoveryOptions.PodNamespace;
+                c.PodLabelSelector = options.AkkaClusterOptions.KubernetesDiscoveryOptions.PodLabelSelector;
             });
         }
         else
@@ -201,6 +209,10 @@ public static class StressHostingExtensions
 
         Debug.Assert(options.AkkaClusterOptions.Port != null, "options.Port != null");
         builder = builder
+            .ConfigureLoggers(configBuilder =>
+            {
+                configBuilder.LogConfigOnStart = true;
+            })
             .AddHocon(options.AkkaClusterOptions.UseKubernetesLease ? K8sLeaseSbrConfig : DefaultSbrConfig, HoconAddMode.Prepend) // need to add SBR 
             .AddHocon(MaxFrameSize, HoconAddMode.Prepend)
             .WithRemoting("0.0.0.0", options.AkkaClusterOptions.Port.Value, options.AkkaClusterOptions.Hostname)
