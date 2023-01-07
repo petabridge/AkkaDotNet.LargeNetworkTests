@@ -17,7 +17,7 @@ var akkaConfiguration = builder.Configuration.GetRequiredSection(nameof(StressOp
 
 builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuilder =>
 {
-    configurationBuilder.WithClusterBootstrap(akkaConfiguration,
+    configurationBuilder.WithStressCluster(akkaConfiguration,
         new[] { ActorSystemConstants.FrontendRole, ActorSystemConstants.DistributedPubSubRole });
     configurationBuilder.WithSerilog(akkaConfiguration.SerilogOptions);
     configurationBuilder.WithReadyCheckActors();
