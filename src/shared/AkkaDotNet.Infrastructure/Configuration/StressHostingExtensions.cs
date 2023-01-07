@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using Akka.Actor;
 using Akka.Cluster.Hosting;
+using Akka.Cluster.Hosting.SBR;
 using Akka.Configuration;
 using Akka.Coordination.KubernetesApi;
 using Akka.Discovery.KubernetesApi;
@@ -167,6 +168,24 @@ public static class StressHostingExtensions
     public static AkkaConfigurationBuilder WithStressCluster(this AkkaConfigurationBuilder builder, StressOptions options, IEnumerable<string> roles)
     {
         var clusterOptions = new ClusterOptions() { Roles = roles.ToArray() };
+        
+        // disabled until https://github.com/akkadotnet/Akka.Management/issues/1198
+        options.AkkaClusterOptions.UseKubernetesLease = false;
+        
+        if (options.AkkaClusterOptions.UseKubernetesLease)
+        {
+            clusterOptions.SplitBrainResolver = new LeaseMajorityOption()
+            {
+                LeaseImplementation = new KubernetesLeaseOption()
+                {
+
+                }
+            };
+        }
+        else
+        {
+            clusterOptions.SplitBrainResolver = new KeepMajorityOption();
+        }
 
         if (options.AkkaClusterOptions.UseKubernetesDiscovery)
         {
@@ -184,11 +203,14 @@ public static class StressHostingExtensions
             }, autoStart: true);
             
             // Add Akka.Discovery.KubernetesApi support
-            builder.WithKubernetesDiscovery(c =>
-            {
-                c.PodNamespace = options.AkkaClusterOptions.KubernetesDiscoveryOptions.PodNamespace;
-                c.PodLabelSelector = options.AkkaClusterOptions.KubernetesDiscoveryOptions.PodLabelSelector;
-            });
+            // builder.WithKubernetesDiscovery(c =>
+            // {
+            //     c.PodNamespace = options.AkkaClusterOptions.KubernetesDiscoveryOptions.PodNamespace;
+            //     c.PodLabelSelector = options.AkkaClusterOptions.KubernetesDiscoveryOptions.PodLabelSelector;
+            // });
+
+            builder.AddHocon(
+                CreateDiscoveryConfig(options.AkkaClusterOptions), HoconAddMode.Prepend);
         }
         else
         {
@@ -213,7 +235,6 @@ public static class StressHostingExtensions
             {
                 configBuilder.LogConfigOnStart = true;
             })
-            .AddHocon(options.AkkaClusterOptions.UseKubernetesLease ? K8sLeaseSbrConfig : DefaultSbrConfig, HoconAddMode.Prepend) // need to add SBR 
             .AddHocon(MaxFrameSize, HoconAddMode.Prepend)
             .WithRemoting("0.0.0.0", options.AkkaClusterOptions.Port.Value, options.AkkaClusterOptions.Hostname)
             .WithClustering(clusterOptions)

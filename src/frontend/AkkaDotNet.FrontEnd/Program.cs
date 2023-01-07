@@ -51,7 +51,7 @@ app.UseEndpoints(endpoints =>
         var checkResult = await readyCheck.Ask<ReadyResult>(ReadyCheck.Instance, TimeSpan.FromSeconds(3));
         //if (checkResult.IsReady)
             return Results.StatusCode(200);
-        return Results.StatusCode(500);
+        //return Results.StatusCode(500);
     });
 
 });
