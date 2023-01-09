@@ -47,6 +47,6 @@ public sealed class ItemMessagingActor : ReceiveActor, IWithTimers
         Timers!.StartPeriodicTimer(ScheduleKey, WriteShard.Instance, TimeSpan.FromSeconds(1),TimeSpan.FromSeconds(1));
     }
 
-    public ITimerScheduler Timers { get; set; }
+    public ITimerScheduler? Timers { get; set; }
     private readonly IActorRef _itemShardRegion;
 }

@@ -23,3 +23,5 @@ data:
   StressOptions__SerilogOptions__SeqPort: "8988"
 
   StressOptions__DispatcherConfig: "Defaults"
+
+  JAEGER_AGENT_HOST: "jaeger-agent"   

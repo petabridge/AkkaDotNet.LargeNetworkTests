@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Net;
 using System.Reflection;
@@ -33,17 +34,18 @@ public static class OpenTelemetryConfigurationExtensions
 
         // enables OpenTelemetry for ASP.NET / .NET Core
         // TODO: leave tracing disabled for now
-        // services.AddOpenTelemetryTracing(builder =>
-        // {
-        //     builder
-        //         .SetResourceBuilder(resource)
-        //         .AddHttpClientInstrumentation()
-        //         .AddAspNetCoreInstrumentation()
-        //         .AddJaegerExporter(opt =>
-        //         {
-        //             opt.AgentHost = Environment.GetEnvironmentVariable(JaegerAgentHostEnvironmentVar);
-        //         });
-        // });
+        services.AddOpenTelemetryTracing(builder =>
+        {
+            builder
+                .SetResourceBuilder(resource)
+                .AddHttpClientInstrumentation()
+                .AddAspNetCoreInstrumentation()
+                .AddJaegerExporter(opt =>
+                {
+                    opt.AgentHost = Environment.GetEnvironmentVariable(JaegerAgentHostEnvironmentVar) ?? "localhost";
+                })
+                .SetSampler(new TraceIdRatioBasedSampler(0.1));
+        });
 
         services.AddOpenTelemetryMetrics(builder =>
         {
@@ -61,4 +63,6 @@ public static class OpenTelemetryConfigurationExtensions
 
         return services;
     }
+
+    public const string JaegerAgentHostEnvironmentVar = "JAEGER_AGENT_HOST";
 }
