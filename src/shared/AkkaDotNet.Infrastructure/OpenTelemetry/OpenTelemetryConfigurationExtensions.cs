@@ -33,18 +33,22 @@ public static class OpenTelemetryConfigurationExtensions
             .AddService(Assembly.GetEntryAssembly()!.GetName().Name, serviceInstanceId: $"{Dns.GetHostName()}");
 
         // enables OpenTelemetry for ASP.NET / .NET Core
-        // TODO: leave tracing disabled for now
+        // TODO: need to add config toggle for this
         services.AddOpenTelemetryTracing(builder =>
         {
             builder
                 .SetResourceBuilder(resource)
+                .AddPhobosInstrumentation(compressShardTraces:true) // eliminate sharding infrastructure from traces
                 .AddHttpClientInstrumentation()
-                .AddAspNetCoreInstrumentation()
+                .AddAspNetCoreInstrumentation(options =>
+                {
+                    options.Filter = context => !context.Request.Path.StartsWithSegments("/metrics");
+                })
+                .SetSampler(new TraceIdRatioBasedSampler(1.0d))
                 .AddJaegerExporter(opt =>
                 {
                     opt.AgentHost = Environment.GetEnvironmentVariable(JaegerAgentHostEnvironmentVar) ?? "localhost";
-                })
-                .SetSampler(new TraceIdRatioBasedSampler(0.1));
+                });
         });
 
         services.AddOpenTelemetryMetrics(builder =>

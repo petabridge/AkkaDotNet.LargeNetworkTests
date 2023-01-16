@@ -2,8 +2,8 @@
   <PropertyGroup>
     <Copyright>Copyright © 2022 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.6.0</VersionPrefix>
-    <PackageReleaseNotes>• Upgraded all dependencies</PackageReleaseNotes>
+    <VersionPrefix>0.6.4</VersionPrefix>
+    <PackageReleaseNotes>• Bumped version</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
     <PackageProjectUrl>

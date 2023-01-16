@@ -26,13 +26,18 @@ public sealed class ItemMessagingActor : ReceiveActor, IWithTimers
             var shouldWrite = ThreadLocalRandom.Current.Next(0,1);
             var countValue = ThreadLocalRandom.Current.Next(0, 10);
 
+            var self = Self;
+
+                /*
+                 * N.B. We use `Ask<T>` here because any messages sent by timers are not traced by default.
+                 */
             if (shouldWrite == 0)
             {
-                _itemShardRegion.Tell(new AddItem(productId, countValue));
+                _itemShardRegion.Ask<CommandResponse>(new AddItem(productId, countValue)).PipeTo(self);
             }
             else
             {
-                _itemShardRegion.Tell(new RemoveItem(productId, countValue));
+                _itemShardRegion.Ask<CommandResponse>(new RemoveItem(productId, countValue)).PipeTo(self);
             }
         });
 

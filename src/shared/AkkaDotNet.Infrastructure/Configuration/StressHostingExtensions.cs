@@ -4,6 +4,7 @@ using System.Linq;
 using Akka.Actor;
 using Akka.Cluster.Hosting;
 using Akka.Cluster.Hosting.SBR;
+using Akka.Cluster.Sharding;
 using Akka.Configuration;
 using Akka.Coordination.KubernetesApi;
 using Akka.Discovery.KubernetesApi;
@@ -21,6 +22,8 @@ using Petabridge.Cmd.Remote;
 using Phobos.Hosting;
 
 namespace AkkaDotNet.Infrastructure.Configuration;
+
+public class OtherRegionMarker{ }
 
 /// <summary>
 /// Designed to add Akka.Cluster.Bootstrap and Akka.Management to our applications
@@ -241,10 +244,7 @@ public static class StressHostingExtensions
             .AddPersistence(options.PersistenceOptions)
             .WithPhobos(AkkaRunMode.AkkaCluster, configBuilder =>
             {
-                configBuilder.WithTracing(tracingConfigBuilder =>
-                {
-                    tracingConfigBuilder.SetTraceUserActors(false).SetTraceSystemActors(false);
-                });
+                configBuilder.WithTracing(tracingConfigBuilder => tracingConfigBuilder.)
             })
             .StartActors((system, registry) =>
             {
@@ -269,13 +269,23 @@ public static class StressHostingExtensions
         return builder.StartActors((system, registry) =>
         {
             var cluster = Akka.Cluster.Cluster.Get(system);
-            
+
             cluster.RegisterOnMemberUp(() =>
             {
                 var shardRegion = registry.Get<IWithItem>();
                 system.ActorOf(Props.Create(() => new ItemMessagingActor(shardRegion)), "item-messaging");
             });
         });
+        // .StartActors((system, registry) =>
+        // {
+        //     var cluster = Akka.Cluster.Cluster.Get(system);
+        //     
+        //     cluster.RegisterOnMemberUp(() =>
+        //     {
+        //         var shardRegion = registry.Get<OtherRegionMarker>();
+        //         system.ActorOf(Props.Create(() => new ItemMessagingActor(shardRegion)), "other-messaging");
+        //     });
+        // });;
     }
 
     public static AkkaConfigurationBuilder WithPetabridgeCmd(this AkkaConfigurationBuilder builder)

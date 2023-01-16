@@ -3,6 +3,7 @@ using Akka.Actor;
 using Akka.Cluster.Hosting;
 using Akka.Cluster.Sharding;
 using Akka.Hosting;
+using Akka.Util;
 using AkkaDotNet.BackEnd.Actors;
 using AkkaDotNet.Infrastructure;
 using AkkaDotNet.Infrastructure.Actors;
@@ -11,6 +12,11 @@ using AkkaDotNet.Infrastructure.Logging;
 using AkkaDotNet.Infrastructure.OpenTelemetry;
 using AkkaDotNet.Infrastructure.Sharding;
 using AkkaDotNet.Messages;
+using AkkaDotNet.Messages.Commands;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,14 +34,28 @@ builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuil
     configurationBuilder.WithReadyCheckActors();
     if (akkaConfiguration.ShardingOptions.Enabled)
     {
-        configurationBuilder.WithShardRegion<IWithItem>("items", s => ItemActor.PropsFor(s, akkaConfiguration.DistributedPubSubOptions.Enabled), new ItemShardExtractor(),
+        configurationBuilder.WithShardRegion<IWithItem>("items",
+                s => ItemActor.PropsFor(s, akkaConfiguration.DistributedPubSubOptions.Enabled),
+                new ItemShardExtractor(),
                 new ShardOptions()
                 {
                     RememberEntities = akkaConfiguration.ShardingOptions.RememberEntities,
                     Role = ActorSystemConstants.BackendRole,
-                    StateStoreMode = akkaConfiguration.ShardingOptions.UseDData ? StateStoreMode.DData : StateStoreMode.Persistence
+                    StateStoreMode = akkaConfiguration.ShardingOptions.UseDData
+                        ? StateStoreMode.DData
+                        : StateStoreMode.Persistence
                 })
+
+            // duplicate region for producing graphs
+            // .WithShardRegion<OtherRegionMarker>("other", s => ItemActor.PropsFor(s, akkaConfiguration.DistributedPubSubOptions.Enabled), new ItemShardExtractor(),
+            //     new ShardOptions()
+            //     {
+            //         RememberEntities = akkaConfiguration.ShardingOptions.RememberEntities,
+            //         Role = ActorSystemConstants.BackendRole,
+            //         StateStoreMode = akkaConfiguration.ShardingOptions.UseDData ? StateStoreMode.DData : StateStoreMode.Persistence
+            //     })
             .WithItemMessagingActor();
+            
     }
 });
 
@@ -50,8 +70,9 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
     
-    endpoints.MapGet("/ready", async (ActorRegistry registry) =>
+    endpoints.MapGet("/ready", async (ActorRegistry registry, IRequiredActor<IWithItem> itemActor) =>
     {
+        itemActor.ActorRef.Tell(new AddItem(ThreadLocalRandom.Current.Next().ToString(), ThreadLocalRandom.Current.Next()));
         var readyCheck = registry.Get<ReadyCheckActor>();
         var checkResult = await readyCheck.Ask<ReadyResult>(ReadyCheck.Instance, TimeSpan.FromSeconds(3));
         //if (checkResult.IsReady)
