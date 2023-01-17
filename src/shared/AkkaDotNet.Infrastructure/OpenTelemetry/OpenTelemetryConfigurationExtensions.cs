@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Net;
 using System.Reflection;
@@ -32,18 +33,23 @@ public static class OpenTelemetryConfigurationExtensions
             .AddService(Assembly.GetEntryAssembly()!.GetName().Name, serviceInstanceId: $"{Dns.GetHostName()}");
 
         // enables OpenTelemetry for ASP.NET / .NET Core
-        // TODO: leave tracing disabled for now
-        // services.AddOpenTelemetryTracing(builder =>
-        // {
-        //     builder
-        //         .SetResourceBuilder(resource)
-        //         .AddHttpClientInstrumentation()
-        //         .AddAspNetCoreInstrumentation()
-        //         .AddJaegerExporter(opt =>
-        //         {
-        //             opt.AgentHost = Environment.GetEnvironmentVariable(JaegerAgentHostEnvironmentVar);
-        //         });
-        // });
+        // TODO: need to add config toggle for this
+        services.AddOpenTelemetryTracing(builder =>
+        {
+            builder
+                .SetResourceBuilder(resource)
+                .AddPhobosInstrumentation(compressShardTraces:true) // eliminate sharding infrastructure from traces
+                .AddHttpClientInstrumentation()
+                .AddAspNetCoreInstrumentation(options =>
+                {
+                    options.Filter = context => !context.Request.Path.StartsWithSegments("/metrics");
+                })
+                .SetSampler(new TraceIdRatioBasedSampler(1.0d))
+                .AddJaegerExporter(opt =>
+                {
+                    opt.AgentHost = Environment.GetEnvironmentVariable(JaegerAgentHostEnvironmentVar) ?? "localhost";
+                });
+        });
 
         services.AddOpenTelemetryMetrics(builder =>
         {
@@ -61,4 +67,6 @@ public static class OpenTelemetryConfigurationExtensions
 
         return services;
     }
+
+    public const string JaegerAgentHostEnvironmentVar = "JAEGER_AGENT_HOST";
 }

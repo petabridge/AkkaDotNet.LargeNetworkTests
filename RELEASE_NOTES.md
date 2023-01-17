@@ -1,3 +1,12 @@
+## [0.6.4] / 14 December 2022
+- Bumped version
+
+## [0.6.2] / 14 December 2022
+- Bumped version
+
+## [0.6.1] / 14 December 2022
+- Enabled shard trace compressor and made add / remove item commands more visible in tracing
+
 ## [0.5.12] / 25 April 2022
 - Added `DistributedPubSub` - but made it optional
 - Disabled `DistributedPubSub`
