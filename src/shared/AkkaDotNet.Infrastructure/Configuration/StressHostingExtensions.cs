@@ -244,7 +244,7 @@ public static class StressHostingExtensions
             .AddPersistence(options.PersistenceOptions)
             .WithPhobos(AkkaRunMode.AkkaCluster, configBuilder =>
             {
-                configBuilder.WithTracing(tracingConfigBuilder => tracingConfigBuilder.)
+                
             })
             .StartActors((system, registry) =>
             {
