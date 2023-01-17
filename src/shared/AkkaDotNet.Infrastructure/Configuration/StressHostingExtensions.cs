@@ -1,8 +1,13 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Akka.Actor;
 using Akka.Cluster.Hosting;
+using Akka.Cluster.Hosting.SBR;
+using Akka.Cluster.Sharding;
 using Akka.Configuration;
 using Akka.Coordination.KubernetesApi;
+using Akka.Discovery.KubernetesApi;
 using Akka.Hosting;
 using Akka.Management;
 using Akka.Management.Cluster.Bootstrap;
@@ -17,6 +22,8 @@ using Petabridge.Cmd.Remote;
 using Phobos.Hosting;
 
 namespace AkkaDotNet.Infrastructure.Configuration;
+
+public class OtherRegionMarker{ }
 
 /// <summary>
 /// Designed to add Akka.Cluster.Bootstrap and Akka.Management to our applications
@@ -161,30 +168,58 @@ public static class StressHostingExtensions
         }
     ").WithFallback(KubernetesLease.DefaultConfiguration);
     
-    public static AkkaConfigurationBuilder WithClusterBootstrap(this AkkaConfigurationBuilder builder, StressOptions options, IEnumerable<string> roles)
+    public static AkkaConfigurationBuilder WithStressCluster(this AkkaConfigurationBuilder builder, StressOptions options, IEnumerable<string> roles)
     {
         var clusterOptions = new ClusterOptions() { Roles = roles.ToArray() };
+        
+        // disabled until https://github.com/akkadotnet/Akka.Management/issues/1198
+        options.AkkaClusterOptions.UseKubernetesLease = false;
+        
+        if (options.AkkaClusterOptions.UseKubernetesLease)
+        {
+            clusterOptions.SplitBrainResolver = new LeaseMajorityOption()
+            {
+                LeaseImplementation = new KubernetesLeaseOption()
+                {
+
+                }
+            };
+        }
+        else
+        {
+            clusterOptions.SplitBrainResolver = new KeepMajorityOption();
+        }
 
         if (options.AkkaClusterOptions.UseKubernetesDiscovery)
         {
-            var bootstrapConfig = CreateDiscoveryConfig(options.AkkaClusterOptions)
-                .WithFallback(ClusterBootstrap.DefaultConfiguration())
-                .WithFallback(AkkaManagementProvider.DefaultConfiguration());
-            
-            builder.AddHocon(bootstrapConfig).WithActors(async (system, registry) =>
+            // Add Akka.Management support
+            builder.WithAkkaManagement(setup =>
             {
-                // Akka Management hosts the HTTP routes used by bootstrap
-                await AkkaManagement.Get(system).Start();
-
-                // Starting the bootstrap process needs to be done explicitly
-                await ClusterBootstrap.Get(system).Start();
+                setup.Http.Port = options.AkkaClusterOptions.ManagementPort;
             });
+            
+            // Add Akka.Management.Cluster.Bootstrap support
+            builder.WithClusterBootstrap(setup =>
+            {
+                setup.ContactPointDiscovery.PortName = "management";
+                setup.ContactPointDiscovery.RequiredContactPointsNr = 3;
+            }, autoStart: true);
+            
+            // Add Akka.Discovery.KubernetesApi support
+            // builder.WithKubernetesDiscovery(c =>
+            // {
+            //     c.PodNamespace = options.AkkaClusterOptions.KubernetesDiscoveryOptions.PodNamespace;
+            //     c.PodLabelSelector = options.AkkaClusterOptions.KubernetesDiscoveryOptions.PodLabelSelector;
+            // });
+
+            builder.AddHocon(
+                CreateDiscoveryConfig(options.AkkaClusterOptions), HoconAddMode.Prepend);
         }
         else
         {
             // not using K8s discovery - need to populate some seed nodes
             if (options.AkkaClusterOptions.SeedNodes != null)
-                clusterOptions.SeedNodes = options.AkkaClusterOptions.SeedNodes.Select(c => Address.Parse(c)).ToArray();
+                clusterOptions.SeedNodes = options.AkkaClusterOptions.SeedNodes.ToArray();
         }
 
         switch (options.DispatcherConfig)
@@ -199,17 +234,17 @@ public static class StressHostingExtensions
 
         Debug.Assert(options.AkkaClusterOptions.Port != null, "options.Port != null");
         builder = builder
-            .AddHocon(options.AkkaClusterOptions.UseKubernetesLease ? K8sLeaseSbrConfig : DefaultSbrConfig) // need to add SBR 
-            .AddHocon(MaxFrameSize)
-            .WithRemoting(options.AkkaClusterOptions.Hostname, options.AkkaClusterOptions.Port.Value)
+            .ConfigureLoggers(configBuilder =>
+            {
+                configBuilder.LogConfigOnStart = true;
+            })
+            .AddHocon(MaxFrameSize, HoconAddMode.Prepend)
+            .WithRemoting("0.0.0.0", options.AkkaClusterOptions.Port.Value, options.AkkaClusterOptions.Hostname)
             .WithClustering(clusterOptions)
             .AddPersistence(options.PersistenceOptions)
             .WithPhobos(AkkaRunMode.AkkaCluster, configBuilder =>
             {
-                configBuilder.WithTracing(tracingConfigBuilder =>
-                {
-                    tracingConfigBuilder.SetTraceUserActors(false).SetTraceSystemActors(false);
-                });
+                configBuilder.WithTracing(tracingConfigBuilder => tracingConfigBuilder.)
             })
             .StartActors((system, registry) =>
             {
@@ -234,13 +269,23 @@ public static class StressHostingExtensions
         return builder.StartActors((system, registry) =>
         {
             var cluster = Akka.Cluster.Cluster.Get(system);
-            
+
             cluster.RegisterOnMemberUp(() =>
             {
                 var shardRegion = registry.Get<IWithItem>();
                 system.ActorOf(Props.Create(() => new ItemMessagingActor(shardRegion)), "item-messaging");
             });
         });
+        // .StartActors((system, registry) =>
+        // {
+        //     var cluster = Akka.Cluster.Cluster.Get(system);
+        //     
+        //     cluster.RegisterOnMemberUp(() =>
+        //     {
+        //         var shardRegion = registry.Get<OtherRegionMarker>();
+        //         system.ActorOf(Props.Create(() => new ItemMessagingActor(shardRegion)), "other-messaging");
+        //     });
+        // });;
     }
 
     public static AkkaConfigurationBuilder WithPetabridgeCmd(this AkkaConfigurationBuilder builder)

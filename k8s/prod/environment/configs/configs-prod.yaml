@@ -31,7 +31,7 @@ data:
 
   # configure Dispatcher under test
   # "DispatcherConfig": "ChannelExecutor64"
-  StressOptions__DispatcherConfig: "ChannelExecutor64"
+  StressOptions__DispatcherConfig: "Defaults"
 
   # configure Akka.Persistence
   StressOptions__PersistenceOptions__Enabled: "true"

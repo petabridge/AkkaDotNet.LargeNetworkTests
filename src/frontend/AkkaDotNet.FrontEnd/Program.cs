@@ -17,7 +17,7 @@ var akkaConfiguration = builder.Configuration.GetRequiredSection(nameof(StressOp
 
 builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuilder =>
 {
-    configurationBuilder.WithClusterBootstrap(akkaConfiguration,
+    configurationBuilder.WithStressCluster(akkaConfiguration,
         new[] { ActorSystemConstants.FrontendRole, ActorSystemConstants.DistributedPubSubRole });
     configurationBuilder.WithSerilog(akkaConfiguration.SerilogOptions);
     configurationBuilder.WithReadyCheckActors();
@@ -51,7 +51,7 @@ app.UseEndpoints(endpoints =>
         var checkResult = await readyCheck.Ask<ReadyResult>(ReadyCheck.Instance, TimeSpan.FromSeconds(3));
         //if (checkResult.IsReady)
             return Results.StatusCode(200);
-        return Results.StatusCode(500);
+        //return Results.StatusCode(500);
     });
 
 });

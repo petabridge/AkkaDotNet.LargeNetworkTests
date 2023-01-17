@@ -32,7 +32,7 @@ public static class SerilogConfigurationExtensions
         var loggerConfiguration = new LoggerConfiguration()
             .Enrich.FromLogContext()
             .Enrich.WithProperty(PodNameProperty, GetServiceName())
-            .Enrich.WithProperty(ServiceNameProperty, Assembly.GetEntryAssembly()?.GetName().Name)
+            .Enrich.WithProperty(ServiceNameProperty, Assembly.GetEntryAssembly()?.GetName().Name!)
             .WriteTo.Console(
                 outputTemplate:
                 "[{SERVICE_NAME}][{POD_NAME}][{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}",
@@ -52,7 +52,7 @@ public static class SerilogConfigurationExtensions
         Log.Logger = loggerConfiguration.CreateLogger();
         
         // add to Akka.NET
-        return builder.AddHocon(SerilogConfig);
+        return builder.AddHocon(SerilogConfig, HoconAddMode.Append);
     }
     
     /// <summary>

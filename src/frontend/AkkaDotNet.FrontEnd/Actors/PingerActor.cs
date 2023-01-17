@@ -55,7 +55,7 @@ public class PingerActor : ReceiveActor, IWithTimers
         });
     }
 
-    public ITimerScheduler Timers { get; set; }
+    public ITimerScheduler Timers { get; set; } = null!;
 
     protected override void PreStart()
     {
