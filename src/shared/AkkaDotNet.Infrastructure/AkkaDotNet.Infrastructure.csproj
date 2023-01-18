@@ -19,7 +19,7 @@
         <PackageReference Include="Petabridge.Cmd.Cluster.Sharding" Version="$(PbmVersion)" />
         <PackageReference Include="Petabridge.Cmd.Remote" Version="$(PbmVersion)" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
-        <PackageReference Include="Serilog.Sinks.Seq" Version="5.1.1" />
+        <PackageReference Include="Serilog.Sinks.Seq" Version="5.2.2" />
         <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="$(OTelInstrumentationVersion)" />
         <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="$(OTelInstrumentationVersion)" />
         <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="$(OTelInstrumentationVersion)" />
