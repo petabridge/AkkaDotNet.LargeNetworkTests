@@ -78,7 +78,7 @@ spec:
         emptyDir: {}
       containers:
       - name: frontend
-        image: akkadotnet.frontend:0.6.2
+        image: akkadotnet.frontend:0.6.4
         env:
         - name: POD_NAME
           valueFrom:

@@ -26,7 +26,6 @@ using Nuke.Common.Tools.SignClient;
 using Octokit;
 using Nuke.Common.Utilities;
 
-[CheckBuildProjectConfigurations]
 [ShutdownDotNetAfterServerBuild]
 partial class Build : NukeBuild
 {
@@ -311,11 +310,14 @@ partial class Build : NukeBuild
         .DependsOn(Compile)
         .Executes(() =>
         {
-            var projects = Solution.GetProjects("*.Tests");
+            var projects = Solution.GetAllProjects("*.Tests");
             foreach (var project in projects)
             {
+                var frameworks = project.GetTargetFrameworks();
+                if(frameworks is null)
+                    continue;
                 Information($"Running tests from {project}");
-                foreach (var fw in project.GetTargetFrameworks())
+                foreach (var fw in frameworks)
                 {
                     Information($"Running for {project} ({fw}) ...");
                     DotNetTest(c => c

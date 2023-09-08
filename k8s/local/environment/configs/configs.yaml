@@ -8,7 +8,6 @@ data:
   ASPNETCORE_ENVIRONMENT: Production
 
   # standard Akka.NET ports for all services
-  StressOptions__AkkaClusterOptions__ManagementPort: "9221"
   StressOptions__AkkaClusterOptions__ManagementPort: "9228"
   StressOptions__AkkaClusterOptions__UseKubernetesLease: "true"
 
