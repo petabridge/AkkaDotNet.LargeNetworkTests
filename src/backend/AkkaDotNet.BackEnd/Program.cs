@@ -1,4 +1,3 @@
-using System;
 using Akka.Actor;
 using Akka.Cluster.Hosting;
 using Akka.Cluster.Sharding;
@@ -13,10 +12,6 @@ using AkkaDotNet.Infrastructure.OpenTelemetry;
 using AkkaDotNet.Infrastructure.Sharding;
 using AkkaDotNet.Messages;
 using AkkaDotNet.Messages.Commands;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +19,7 @@ builder.Configuration.AddEnvironmentVariables();
 
 builder.Logging.ClearProviders().AddConsole().AddSerilog().AddFilter(null, LogLevel.Warning);
 
-var akkaConfiguration = builder.Configuration.GetRequiredSection(nameof(StressOptions)).Get<StressOptions>();
+var akkaConfiguration = builder.Configuration.GetRequiredSection(nameof(StressOptions)).Get<StressOptions>() ?? new StressOptions();
 
 builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuilder =>
 {
@@ -58,8 +53,7 @@ builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuil
             
     }
 });
-
-builder.Services.AddOpenTelemetry();
+builder.Services.WithOpenTelemetry();
 
 var app = builder.Build();
 

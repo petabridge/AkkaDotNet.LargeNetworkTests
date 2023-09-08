@@ -33,15 +33,15 @@ public class ShardingOptions
 
 public class AkkaClusterOptions
 {
-    public string? Hostname { get; set; }
-    public int? Port { get;set; }
-    
+    public string Hostname { get; set; } = "localhost";
+    public int Port { get; set; } = 9229;
+
     /// <summary>
     /// Port used by Akka.Management HTTP
     /// </summary>
-    public int? ManagementPort { get; set; }
+    public int ManagementPort { get; set; } = 9228;
 
-    public List<string>? Roles { get; set; } 
+    public string[] Roles { get; set; } = Array.Empty<string>();
     public bool UseKubernetesDiscovery { get; set; } = false;
 
     public bool UseKubernetesLease { get; set; } = false;
@@ -51,7 +51,7 @@ public class AkkaClusterOptions
     /// <summary>
     /// Used when we aren't doing Kubernetes discovery
     /// </summary>
-    public List<string>? SeedNodes { get; set; }
+    public string[] SeedNodes { get; set; } = Array.Empty<string>();
 }
 
 public class KubernetesDiscoveryOptions
