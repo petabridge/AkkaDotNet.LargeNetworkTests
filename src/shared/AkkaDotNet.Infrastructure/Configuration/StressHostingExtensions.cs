@@ -11,6 +11,7 @@ using Akka.Remote.Hosting;
 using AkkaDotNet.Infrastructure.Actors;
 using AkkaDotNet.Infrastructure.Persistence;
 using AkkaDotNet.Messages;
+using Microsoft.Extensions.Configuration;
 using Petabridge.Cmd.Cluster;
 using Petabridge.Cmd.Cluster.Sharding;
 using Petabridge.Cmd.Host;
@@ -103,7 +104,7 @@ public static class StressHostingExtensions
         akka.remote.dot-netty.tcp.maximum-frame-size = 1m
     ";
 
-    public static AkkaConfigurationBuilder WithStressCluster(this AkkaConfigurationBuilder builder, StressOptions options, IEnumerable<string> roles)
+    public static AkkaConfigurationBuilder WithStressCluster(this AkkaConfigurationBuilder builder, StressOptions options, IEnumerable<string> roles, IConfiguration configuration)
     {
         var clusterOptions = new ClusterOptions() { Roles = roles.ToArray() };
         
@@ -167,11 +168,8 @@ public static class StressHostingExtensions
         }
 
         builder = builder
-            .ConfigureLoggers(configBuilder =>
-            {
-                configBuilder.LogConfigOnStart = true;
-            })
             .AddHocon(MaxFrameSize, HoconAddMode.Prepend)
+            .AddHocon(configuration.GetSection("petabridge"), HoconAddMode.Prepend)
             .WithRemoting("0.0.0.0", options.AkkaClusterOptions.Port, options.AkkaClusterOptions.Hostname)
             .WithClustering(clusterOptions)
             .AddPersistence(options.PersistenceOptions)

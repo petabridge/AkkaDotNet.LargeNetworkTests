@@ -18,7 +18,7 @@ var akkaConfiguration = builder.Configuration.GetRequiredSection(nameof(StressOp
 builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuilder =>
 {
     configurationBuilder.WithStressCluster(akkaConfiguration,
-        new[] { ActorSystemConstants.FrontendRole, ActorSystemConstants.DistributedPubSubRole });
+        new[] { ActorSystemConstants.FrontendRole, ActorSystemConstants.DistributedPubSubRole }, builder.Configuration);
     configurationBuilder.WithSerilog(akkaConfiguration.SerilogOptions);
     configurationBuilder.WithReadyCheckActors();
     if (akkaConfiguration.DistributedPubSubOptions.Enabled)
@@ -34,13 +34,19 @@ builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuil
     }
 });
 
-builder.Services.WithOpenTelemetry();
+if (akkaConfiguration.EnableOpenTelemetry)
+{
+    builder.Services.WithOpenTelemetry();    
+}
 
 var app = builder.Build();
 
-// per https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry.Exporter.Prometheus/README.md
 app.UseRouting();
-app.UseOpenTelemetryPrometheusScrapingEndpoint();
+if (akkaConfiguration.EnableOpenTelemetry)
+{
+    // per https://github.com/open-telemetry/opentelemetry-dotnet/blob/fe78453c03feb8dbe506b2a0284312bdfa1367c5/src/OpenTelemetry.Exporter.Prometheus.AspNetCore/README.md
+    app.UseOpenTelemetryPrometheusScrapingEndpoint();
+}
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
