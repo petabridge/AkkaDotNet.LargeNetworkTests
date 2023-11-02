@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "frontend", "frontend", "{39
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkkaDotNet.FrontEnd", "src\frontend\AkkaDotNet.FrontEnd\AkkaDotNet.FrontEnd.csproj", "{696FA3DA-FE78-43B8-B24C-942662B51D2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkkaDotNet.FrontEnd.Tests", "src\frontend\AkkaDotNet.FrontEnd.Tests\AkkaDotNet.FrontEnd.Tests.csproj", "{3358DBCC-E7A8-4CAF-A49C-599CEA2B1A93}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{6E8AB83C-075B-4333-8DFC-17FE9EFDDBA0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkkaDotNet.Infrastructure", "src\shared\AkkaDotNet.Infrastructure\AkkaDotNet.Infrastructure.csproj", "{98CB4416-9594-425E-990D-771170F92D36}"
@@ -26,6 +24,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{BE2EB7C9-9D6A-4F8A-8226-B21428C5AC7C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkkaDotNet.Messages", "src\shared\AkkaDotNet.Messages\AkkaDotNet.Messages.csproj", "{8F96042B-A435-4789-A92A-67B9C433E293}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTracing.FrontEnd", "src\frontend\OpenTracing.FrontEnd\OpenTracing.FrontEnd.csproj", "{3B7DBF90-D6BB-4684-A88B-4066A7003D02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTracing.Infrastructure", "src\shared\OpenTracing.Infrastructure\OpenTracing.Infrastructure.csproj", "{FA6B1637-0CB9-405E-BD71-609CA3FE0D64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTracing.BackEnd", "src\backend\OpenTracing.BackEnd\OpenTracing.BackEnd.csproj", "{B4F1F5AA-6164-489B-8F2C-E8886E949393}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,10 +43,6 @@ Global
 		{696FA3DA-FE78-43B8-B24C-942662B51D2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{696FA3DA-FE78-43B8-B24C-942662B51D2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{696FA3DA-FE78-43B8-B24C-942662B51D2E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3358DBCC-E7A8-4CAF-A49C-599CEA2B1A93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3358DBCC-E7A8-4CAF-A49C-599CEA2B1A93}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3358DBCC-E7A8-4CAF-A49C-599CEA2B1A93}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3358DBCC-E7A8-4CAF-A49C-599CEA2B1A93}.Release|Any CPU.Build.0 = Release|Any CPU
 		{98CB4416-9594-425E-990D-771170F92D36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{98CB4416-9594-425E-990D-771170F92D36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98CB4416-9594-425E-990D-771170F92D36}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -55,6 +55,18 @@ Global
 		{8F96042B-A435-4789-A92A-67B9C433E293}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F96042B-A435-4789-A92A-67B9C433E293}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F96042B-A435-4789-A92A-67B9C433E293}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B7DBF90-D6BB-4684-A88B-4066A7003D02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B7DBF90-D6BB-4684-A88B-4066A7003D02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B7DBF90-D6BB-4684-A88B-4066A7003D02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B7DBF90-D6BB-4684-A88B-4066A7003D02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA6B1637-0CB9-405E-BD71-609CA3FE0D64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA6B1637-0CB9-405E-BD71-609CA3FE0D64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA6B1637-0CB9-405E-BD71-609CA3FE0D64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA6B1637-0CB9-405E-BD71-609CA3FE0D64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4F1F5AA-6164-489B-8F2C-E8886E949393}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4F1F5AA-6164-489B-8F2C-E8886E949393}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4F1F5AA-6164-489B-8F2C-E8886E949393}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4F1F5AA-6164-489B-8F2C-E8886E949393}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,9 +76,11 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{696FA3DA-FE78-43B8-B24C-942662B51D2E} = {397C6273-19B5-4DA8-8D1F-09185B0D8A02}
-		{3358DBCC-E7A8-4CAF-A49C-599CEA2B1A93} = {397C6273-19B5-4DA8-8D1F-09185B0D8A02}
 		{98CB4416-9594-425E-990D-771170F92D36} = {6E8AB83C-075B-4333-8DFC-17FE9EFDDBA0}
 		{044D0104-F02F-439F-A55C-5FB378D51AF5} = {BE2EB7C9-9D6A-4F8A-8226-B21428C5AC7C}
 		{8F96042B-A435-4789-A92A-67B9C433E293} = {6E8AB83C-075B-4333-8DFC-17FE9EFDDBA0}
+		{3B7DBF90-D6BB-4684-A88B-4066A7003D02} = {397C6273-19B5-4DA8-8D1F-09185B0D8A02}
+		{FA6B1637-0CB9-405E-BD71-609CA3FE0D64} = {6E8AB83C-075B-4333-8DFC-17FE9EFDDBA0}
+		{B4F1F5AA-6164-489B-8F2C-E8886E949393} = {BE2EB7C9-9D6A-4F8A-8226-B21428C5AC7C}
 	EndGlobalSection
 EndGlobal
