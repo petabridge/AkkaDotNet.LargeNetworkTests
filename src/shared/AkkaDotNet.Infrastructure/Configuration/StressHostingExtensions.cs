@@ -15,6 +15,7 @@ using Petabridge.Cmd.Cluster;
 using Petabridge.Cmd.Cluster.Sharding;
 using Petabridge.Cmd.Host;
 using Petabridge.Cmd.Remote;
+using Phobos.Hosting;
 
 namespace AkkaDotNet.Infrastructure.Configuration;
 
@@ -174,10 +175,10 @@ public static class StressHostingExtensions
             .WithRemoting("0.0.0.0", options.AkkaClusterOptions.Port, options.AkkaClusterOptions.Hostname)
             .WithClustering(clusterOptions)
             .AddPersistence(options.PersistenceOptions)
-            // .WithPhobos(AkkaRunMode.AkkaCluster, _ =>
-            // {
-            //     
-            // })
+            .WithPhobos(AkkaRunMode.AkkaCluster, _ =>
+            {
+                
+            })
             .StartActors((system, _) =>
             {
                 system.ActorOf(Props.Create(() => new DispatcherConfigLogger()));
