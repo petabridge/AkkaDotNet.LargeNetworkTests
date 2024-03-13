@@ -25,6 +25,7 @@ metadata:
   labels:
     app: frontend
 spec:
+  publishNotReadyAddresses: true
   clusterIP: None
   ports:
   - port: 9228
