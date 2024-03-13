@@ -1,0 +1,273 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-web
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/path: '/metrics'
+    prometheus.io/port: '80'
+  labels:
+    app: frontend
+spec:
+  type: LoadBalancer
+  ports:
+    - name: query-http
+      port: 1880
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: frontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-akka
+  labels:
+    app: frontend
+spec:
+  clusterIP: None
+  ports:
+  - port: 9228
+    name: management
+  - port: 9221
+    name: akka-remote
+  selector:
+    app: frontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-monitoring
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/path: '/metrics'
+    prometheus.io/port: '52323'
+  labels:
+    app: backend
+spec:
+  clusterIP: None
+  ports:
+  - port: 52323
+    name: metrics
+  selector:
+    app: frontend
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+    akkacluster: stress
+spec:
+  serviceName: "frontend-akka"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+        akkacluster: stress
+    spec:
+      volumes:
+      - name: diagvol
+        emptyDir: {}
+      - name: dumpsvol
+        emptyDir: {}
+      containers:
+      - name: frontend
+        image: opentracing.frontend:0.5.12
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: StressOptions__AkkaClusterOptions__Hostname
+          value: "$(POD_NAME).frontend-akka"
+        - name: DOTNET_DiagnosticPorts
+          value: /diag/port
+        envFrom:
+        - configMapRef:
+            name: stress-configs
+        volumeMounts:
+        - mountPath: /diag
+          name: diagvol
+        - mountPath: /dumps
+          name: dumpsvol
+        readinessProbe:
+          httpGet:
+            path: "/ready"
+            port: 80
+        ports:
+        - containerPort: 9228
+          name: management
+          protocol: TCP
+        - containerPort: 9221
+          name: akka-remote
+          protocol: TCP
+        - containerPort: 80
+          name: http
+          protocol: TCP
+      - name: monitor
+        image: mcr.microsoft.com/dotnet/monitor:6.0
+        # DO NOT use the --no-auth argument for deployments in production; this argument is used for demonstration
+        # purposes only in this example. Please continue reading after this example for further details.
+        args: [ "--no-auth" ]
+        imagePullPolicy: Always
+        env:
+        - name: DOTNETMONITOR_DiagnosticPort__ConnectionMode
+          value: Listen
+        - name: DOTNETMONITOR_DiagnosticPort__EndpointName
+          value: /diag/port
+        - name: DOTNETMONITOR_Storage__DumpTempFolder
+          value: /dumps
+        # ALWAYS use the HTTPS form of the URL for deployments in production; the removal of HTTPS is done for
+        # demonstration purposes only in this example. Please continue reading after this example for further details.
+        - name: DOTNETMONITOR_Urls
+          value: http://*:52323
+        ports:
+        - containerPort: 52323
+          name: metrics
+        volumeMounts:
+        - mountPath: /diag
+          name: diagvol
+        - mountPath: /dumps
+          name: dumpsvol
+        resources:
+          requests:
+            cpu: 50m
+            memory: 32Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-akka
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/path: '/metrics'
+    prometheus.io/port: '80'
+  labels:
+    app: backend
+spec:
+  clusterIP: None
+  ports:
+  - port: 9228
+    name: management
+  - port: 9221
+    name: akka-remote
+  selector:
+    app: backend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-monitoring
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/path: '/metrics'
+    prometheus.io/port: '52323'
+  labels:
+    app: backend
+spec:
+  clusterIP: None
+  ports:
+  - port: 52323
+    name: metrics
+  selector:
+    app: backend
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: backend
+  labels:
+    app: backend
+    akkacluster: stress
+spec:
+  serviceName: "backend-akka"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+        akkacluster: stress
+    spec:
+      volumes:
+      - name: diagvol
+        emptyDir: {}
+      - name: dumpsvol
+        emptyDir: {}
+      containers:
+      - name: backend
+        image: opentracing.backend:0.5.12
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: StressOptions__AkkaClusterOptions__Hostname
+          value: "$(POD_NAME).backend-akka"
+        - name: DOTNET_DiagnosticPorts
+          value: /diag/port
+        envFrom:
+        - configMapRef:
+            name: stress-configs
+        volumeMounts:
+        - mountPath: /diag
+          name: diagvol
+        - mountPath: /dumps
+          name: dumpsvol
+        readinessProbe:
+          httpGet:
+            path: "/ready"
+            port: 80
+        ports:
+        - containerPort: 9228
+          name: management
+          protocol: TCP
+        - containerPort: 9221
+          name: akka-remote
+          protocol: TCP
+        - containerPort: 80
+          name: http
+          protocol: TCP
+      - name: monitor
+        image: mcr.microsoft.com/dotnet/monitor:6.0
+        # DO NOT use the --no-auth argument for deployments in production; this argument is used for demonstration
+        # purposes only in this example. Please continue reading after this example for further details.
+        args: [ "--no-auth" ]
+        imagePullPolicy: Always
+        env:
+        - name: DOTNETMONITOR_DiagnosticPort__ConnectionMode
+          value: Listen
+        - name: DOTNETMONITOR_DiagnosticPort__EndpointName
+          value: /diag/port
+        - name: DOTNETMONITOR_Storage__DumpTempFolder
+          value: /dumps
+        # ALWAYS use the HTTPS form of the URL for deployments in production; the removal of HTTPS is done for
+        # demonstration purposes only in this example. Please continue reading after this example for further details.
+        - name: DOTNETMONITOR_Urls
+          value: http://*:52323
+        ports:
+        - containerPort: 52323
+          name: metrics
+        volumeMounts:
+        - mountPath: /diag
+          name: diagvol
+        - mountPath: /dumps
+          name: dumpsvol
+        resources:
+          requests:
+            cpu: 50m
+            memory: 32Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi

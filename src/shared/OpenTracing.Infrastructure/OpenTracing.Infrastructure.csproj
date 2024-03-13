@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>$(NetCoreFramework)</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Akka.Cluster.Hosting" Version="1.0.3" />
+        <PackageReference Include="Akka.Cluster.Sharding" Version="1.4.49" />
+        <PackageReference Include="Akka.Discovery" Version="1.4.49" />
+        <PackageReference Include="Akka.Management" Version="1.0.3" />
+        <PackageReference Include="Akka.Discovery.KubernetesApi" Version="1.0.3" />
+        <PackageReference Include="Akka.Coordination.KubernetesApi" Version="1.0.3" />
+        <PackageReference Include="Akka.Logger.Serilog" Version="1.4.26" />
+        <PackageReference Include="Akka.Persistence.Azure" Version="0.8.3" />
+        <PackageReference Include="Petabridge.Cmd.Cluster" Version="1.2.2" />
+        <PackageReference Include="Petabridge.Cmd.Cluster.Sharding" Version="1.2.2" />
+        <PackageReference Include="Petabridge.Cmd.Remote" Version="1.2.2" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+        <PackageReference Include="Serilog.Sinks.Seq" Version="5.1.1" />
+        <PackageReference Include="Phobos.Hosting" Version="1.5.1" />
+        <PackageReference Include="Phobos.Actor.Cluster" Version="1.5.1" />
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="4.2.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+        <PackageReference Include="Serilog.Sinks.Seq" Version="5.1.1" />
+        
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.0" />
+
+        <PackageReference Include="Akka.Bootstrap.Docker" Version="0.5.3"/>
+        <PackageReference Include="OpenTracing.Contrib.NetCore" Version="0.8.0" />
+        <PackageReference Include="App.Metrics.AspNetCore.All" Version="4.2.0" />
+        <PackageReference Include="App.Metrics.Formatters.Prometheus" Version="4.2.0" />
+        <PackageReference Include="App.Metrics.Reporting.Console" Version="4.2.0" />
+        <PackageReference Include="Jaeger" Version="1.0.3" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\AkkaDotNet.Messages\AkkaDotNet.Messages.csproj" />
+    </ItemGroup>
+
+</Project>
