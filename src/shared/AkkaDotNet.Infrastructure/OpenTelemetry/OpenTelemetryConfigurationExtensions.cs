@@ -45,16 +45,17 @@ public static class OpenTelemetryConfigurationExtensions
                     {
                         options.Filter = context => !context.Request.Path.StartsWithSegments("/metrics");
                     })
-                    .SetSampler(new TraceIdRatioBasedSampler(1.0d))
-                    .AddOtlpExporter(options =>
+                    .SetSampler(new TraceIdRatioBasedSampler(1.0d));
+                
+                var oTelEndpoint = Environment.GetEnvironmentVariable(JaegerAgentHostEnvironmentVar);
+                if (!string.IsNullOrWhiteSpace(oTelEndpoint))
+                {
+                    builder.AddOtlpExporter(options =>
                     {
-                        var endpoint = Environment.GetEnvironmentVariable(JaegerAgentHostEnvironmentVar);
-                        if (endpoint is not null)
-                        {
-                            options.Endpoint = new Uri($"http://{endpoint}:4317");
-                            options.Protocol = OtlpExportProtocol.Grpc;
-                        }
+                        options.Endpoint = new Uri($"http://{oTelEndpoint}:4317");
+                        options.Protocol = OtlpExportProtocol.Grpc;
                     });
+                }
             })
             .WithMetrics(builder =>
             {
@@ -65,7 +66,7 @@ public static class OpenTelemetryConfigurationExtensions
                     .AddHttpClientInstrumentation()
                     .AddAspNetCoreInstrumentation()
                     .AddMeter(AkkaStressSource)
-                    .AddPrometheusExporter(_ => { });
+                    .AddPrometheusExporter();
             });
 
         return services;

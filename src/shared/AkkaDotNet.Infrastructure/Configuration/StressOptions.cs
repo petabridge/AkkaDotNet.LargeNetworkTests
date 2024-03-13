@@ -16,6 +16,8 @@ public class StressOptions
     public DispatcherConfig DispatcherConfig { get; set; } = DispatcherConfig.Defaults;
 
     public PersistenceOptions PersistenceOptions { get; set; } = new PersistenceOptions();
+
+    public bool EnableOpenTelemetry { get; set; } = true;
 }
 
 public class DistributedPubSubOptions
