@@ -49,12 +49,12 @@ jobs:
             .nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
-      - name: dotnet nuget
-        run: dotnet nuget add source -n Phobos ${{ secrets.CUSTOMNUGETSOURCE }}
+      #- name: dotnet nuget
+      #  run: dotnet nuget add source -n Phobos ${{ secrets.CUSTOMNUGETSOURCE }}
       - name: Run './build.cmd Docker'
         run: ./build.cmd Docker
         env:
-          CustomNuGetSource: ${{ secrets.CUSTOMNUGETSOURCE }}
+          #CustomNuGetSource: ${{ secrets.CUSTOMNUGETSOURCE }}
           Docker_Username: ${{ secrets.DOCKER_USERNAME }}
           Docker_Password: ${{ secrets.DOCKER_PASSWORD }}
           GITHUB_CONTEXT: ${{ toJSON(github) }}
