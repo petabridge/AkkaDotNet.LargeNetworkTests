@@ -39,7 +39,7 @@ public static class OpenTelemetryConfigurationExtensions
                 
                 builder
                     .SetResourceBuilder(resource)
-                    //.AddPhobosInstrumentation(compressShardTraces:true) // eliminate sharding infrastructure from traces
+                    .AddPhobosInstrumentation(compressShardTraces:true) // eliminate sharding infrastructure from traces
                     .AddHttpClientInstrumentation()
                     .AddAspNetCoreInstrumentation(options =>
                     {
@@ -61,7 +61,7 @@ public static class OpenTelemetryConfigurationExtensions
                 builder
                     .SetResourceBuilder(ResourceBuilder.CreateDefault()
                         .AddService(Assembly.GetEntryAssembly()?.GetName().Name ?? "OpenTelemetryMetrics", serviceInstanceId: $"{Dns.GetHostName()}"))
-                    //.AddPhobosInstrumentation()
+                    .AddPhobosInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddAspNetCoreInstrumentation()
                     .AddMeter(AkkaStressSource)

@@ -17,10 +17,10 @@
 	</ItemGroup>
   <PropertyGroup>
     <NetCoreFramework>net6.0</NetCoreFramework>
-    <AkkaVersion>1.5.12</AkkaVersion>
-    <PbmVersion>1.3.2</PbmVersion>
-    <AkkaHostingVersion>1.5.12.1</AkkaHostingVersion>
-    <AkkaManagementVersion>1.5.7</AkkaManagementVersion>
+    <AkkaVersion>1.5.18</AkkaVersion>
+    <PbmVersion>1.4.0</PbmVersion>
+    <AkkaHostingVersion>1.5.17.1</AkkaHostingVersion>
+    <AkkaManagementVersion>1.5.17.1</AkkaManagementVersion>
     <OTelInstrumentationVersion>1.5.1-beta.1</OTelInstrumentationVersion>
   </PropertyGroup>
 </Project>
