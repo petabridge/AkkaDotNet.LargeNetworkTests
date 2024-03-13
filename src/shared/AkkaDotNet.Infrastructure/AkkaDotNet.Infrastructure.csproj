@@ -30,7 +30,7 @@
         <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
         <PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" />
         
-        <PackageReference Include="Phobos.Hosting" />
+        <!--<PackageReference Include="Phobos.Hosting" />-->
 
         <PackageReference Include="Microsoft.Extensions.Hosting" />
     </ItemGroup>
