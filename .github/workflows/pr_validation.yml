@@ -1,6 +1,6 @@
 name: pr_validation
 permissions:
-  contents: read
+  secrets: read
 
 on:
   push:
