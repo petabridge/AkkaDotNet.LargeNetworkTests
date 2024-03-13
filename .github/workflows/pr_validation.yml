@@ -50,7 +50,7 @@ jobs:
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
       - name: dotnet nuget
-        run: dotnet nuget add source -n Phobos ${{ secrets.CUSTOMNUGETSOURCE }}
+        run: dotnet nuget add source -n Phobos "${{ secrets.CUSTOMNUGETSOURCE }}"
       - name: Run './build.cmd All'
         run: ./build.cmd All
         env:
