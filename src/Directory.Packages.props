@@ -10,14 +10,14 @@
     <PackageVersion Include="Akka.Coordination.KubernetesApi" Version="$(AkkaManagementVersion)" />
     <PackageVersion Include="Akka.Discovery" Version="$(AkkaVersion)" />
     <PackageVersion Include="Akka.Discovery.KubernetesApi" Version="$(AkkaManagementVersion)" />
-    <PackageVersion Include="Akka.HealthCheck.Hosting.Web" Version="1.5.9" />
+    <PackageVersion Include="Akka.HealthCheck.Hosting.Web" Version="1.5.17.1" />
     <PackageVersion Include="Akka.Logger.Serilog" Version="1.5.12" />
     <PackageVersion Include="Akka.Management" Version="$(AkkaManagementVersion)" />
-    <PackageVersion Include="Akka.Persistence.Azure" Version="1.5.1" />
+    <PackageVersion Include="Akka.Persistence.Azure" Version="1.5.17.1" />
   </ItemGroup>
   <!-- Phobos -->
   <ItemGroup>
-    <PackageVersion Include="Phobos.Hosting" Version="2.4.1" />
+    <PackageVersion Include="Phobos.Hosting" Version="2.5.0" />
   </ItemGroup>
   <!-- Petabridge.Cmd -->
   <ItemGroup>
@@ -49,7 +49,7 @@
     <PackageVersion Include="Akka.TestKit.XUnit2" Version="$(AkkaVersion)" />
     <PackageVersion Include="FluentAssertions" Version="6.12.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
-    <PackageVersion Include="xunit" Version="2.5.0" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.0" />
+    <PackageVersion Include="xunit" Version="2.7.0" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.7" />
   </ItemGroup>
 </Project>

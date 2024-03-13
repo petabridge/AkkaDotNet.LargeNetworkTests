@@ -38,10 +38,5 @@
     <ItemGroup>
       <ProjectReference Include="..\AkkaDotNet.Messages\AkkaDotNet.Messages.csproj" />
     </ItemGroup>
-    
-    <ItemGroup>
-      <PackageVersion Update="Akka.Discovery" Version="1.5.12" />
-      <PackageVersion Update="OpenTelemetry.Exporter.Console" Version="1.6.0" />
-    </ItemGroup>
 
 </Project>
