@@ -38,5 +38,4 @@
     <ItemGroup>
       <ProjectReference Include="..\AkkaDotNet.Messages\AkkaDotNet.Messages.csproj" />
     </ItemGroup>
-
 </Project>

@@ -21,6 +21,6 @@
     <PbmVersion>1.4.0</PbmVersion>
     <AkkaHostingVersion>1.5.17.1</AkkaHostingVersion>
     <AkkaManagementVersion>1.5.17.1</AkkaManagementVersion>
-    <OTelInstrumentationVersion>1.7.1</OTelInstrumentationVersion>
+    <OTelInstrumentationVersion>1.5.1-beta.1</OTelInstrumentationVersion>
   </PropertyGroup>
 </Project>
