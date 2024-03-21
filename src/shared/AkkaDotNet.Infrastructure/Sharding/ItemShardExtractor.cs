@@ -16,12 +16,6 @@ public class ItemShardExtractor : HashCodeMessageExtractor
         {
             return itemId.ItemId;
         }
-        
-        if(message is ShardRegion.StartEntity startEntity)
-        {
-            return startEntity.EntityId;
-        }
-
         return null;
     }
 }

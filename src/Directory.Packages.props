@@ -11,7 +11,7 @@
     <PackageVersion Include="Akka.Discovery" Version="$(AkkaVersion)" />
     <PackageVersion Include="Akka.Discovery.KubernetesApi" Version="$(AkkaManagementVersion)" />
     <PackageVersion Include="Akka.HealthCheck.Hosting.Web" Version="1.5.17.1" />
-    <PackageVersion Include="Akka.Logger.Serilog" Version="1.5.12" />
+    <PackageVersion Include="Akka.Logger.Serilog" Version="1.5.12.1" />
     <PackageVersion Include="Akka.Management" Version="$(AkkaManagementVersion)" />
     <PackageVersion Include="Akka.Persistence.Azure" Version="1.5.17.1" />
   </ItemGroup>
@@ -33,10 +33,10 @@
   </ItemGroup>
   <!-- OpenTelemetry -->
   <ItemGroup>
-    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.6.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.6.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.6.0-rc.1" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.6.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.7.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.7.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.7.0-rc.1" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.7.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="$(OTelInstrumentationVersion)" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="$(OTelInstrumentationVersion)" />
   </ItemGroup>
