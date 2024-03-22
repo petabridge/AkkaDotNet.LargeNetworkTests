@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Copyright>Copyright © 2024 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.6.4</VersionPrefix>
+    <VersionPrefix>0.6.7</VersionPrefix>
     <PackageReleaseNotes>• Bumped version</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
@@ -18,9 +18,8 @@
   <PropertyGroup>
     <NetCoreFramework>net6.0</NetCoreFramework>
     <AkkaVersion>1.5.18</AkkaVersion>
-    <PbmVersion>1.4.0</PbmVersion>
-    <AkkaHostingVersion>1.5.17.1</AkkaHostingVersion>
-    <AkkaManagementVersion>1.5.17.1</AkkaManagementVersion>
-    <OTelInstrumentationVersion>1.5.1-beta.1</OTelInstrumentationVersion>
+    <PbmVersion>1.4.1</PbmVersion>
+    <AkkaHostingVersion>1.5.18</AkkaHostingVersion>
+    <AkkaManagementVersion>1.5.18-beta1</AkkaManagementVersion>
   </PropertyGroup>
 </Project>

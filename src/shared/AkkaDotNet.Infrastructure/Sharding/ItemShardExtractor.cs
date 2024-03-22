@@ -6,7 +6,7 @@ namespace AkkaDotNet.Infrastructure.Sharding;
 public class ItemShardExtractor : HashCodeMessageExtractor
 {
     // 200 nodes, 10 shards per node
-    public ItemShardExtractor() : base(30)
+    public ItemShardExtractor() : base(200)
     {
     }
 
@@ -16,12 +16,6 @@ public class ItemShardExtractor : HashCodeMessageExtractor
         {
             return itemId.ItemId;
         }
-        
-        if(message is ShardRegion.StartEntity startEntity)
-        {
-            return startEntity.EntityId;
-        }
-
         return null;
     }
 }

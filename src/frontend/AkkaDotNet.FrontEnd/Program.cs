@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Akka.Cluster.Hosting;
 using Akka.Hosting;
 using AkkaDotNet.FrontEnd.Actors;
 using AkkaDotNet.Infrastructure;
@@ -6,6 +7,8 @@ using AkkaDotNet.Infrastructure.Actors;
 using AkkaDotNet.Infrastructure.Configuration;
 using AkkaDotNet.Infrastructure.Logging;
 using AkkaDotNet.Infrastructure.OpenTelemetry;
+using AkkaDotNet.Infrastructure.Sharding;
+using AkkaDotNet.Messages;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +23,9 @@ builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuil
     configurationBuilder.WithStressCluster(akkaConfiguration,
         new[] { ActorSystemConstants.FrontendRole, ActorSystemConstants.DistributedPubSubRole });
     configurationBuilder.WithSerilog(akkaConfiguration.SerilogOptions);
-    configurationBuilder.WithReadyCheckActors();
+    configurationBuilder.WithReadyCheckActors()
+        .WithShardRegionProxy<IWithItem>("items", ActorSystemConstants.BackendRole, new ItemShardExtractor())
+        .WithItemMessagingActor();
     if (akkaConfiguration.DistributedPubSubOptions.Enabled)
     {
         configurationBuilder.StartActors((system, registry) =>

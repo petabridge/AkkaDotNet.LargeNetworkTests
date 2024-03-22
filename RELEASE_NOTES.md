@@ -1,4 +1,4 @@
-## [0.6.4] / 14 December 2022
+## [0.6.7] / 14 December 2022
 - Bumped version
 
 ## [0.6.2] / 14 December 2022
