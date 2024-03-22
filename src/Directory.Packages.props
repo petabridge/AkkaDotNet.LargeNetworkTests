@@ -17,7 +17,7 @@
   </ItemGroup>
   <!-- Phobos -->
   <ItemGroup>
-    <PackageVersion Include="Phobos.Hosting" Version="2.5.0" />
+    <PackageVersion Include="Phobos.Hosting" Version="2.5.1" />
   </ItemGroup>
   <!-- Petabridge.Cmd -->
   <ItemGroup>
@@ -37,8 +37,8 @@
     <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.7.0" />
     <PackageVersion Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.7.0-rc.1" />
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.7.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="$(OTelInstrumentationVersion)" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="$(OTelInstrumentationVersion)" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.7.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.7.0" />
   </ItemGroup>
   <!-- Ms.Ext.Hosting -->
   <ItemGroup>

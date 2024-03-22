@@ -49,7 +49,7 @@ public sealed class ItemMessagingActor : ReceiveActor, IWithTimers
 
     protected override void PreStart()
     {
-        Timers!.StartPeriodicTimer(ScheduleKey, WriteShard.Instance, TimeSpan.FromSeconds(1),TimeSpan.FromSeconds(1));
+        Timers!.StartPeriodicTimer(ScheduleKey, WriteShard.Instance, TimeSpan.FromSeconds(1),TimeSpan.FromSeconds(0.1));
     }
 
     public ITimerScheduler? Timers { get; set; }

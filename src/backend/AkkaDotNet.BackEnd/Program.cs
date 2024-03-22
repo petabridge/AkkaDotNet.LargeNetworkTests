@@ -38,17 +38,9 @@ builder.Services.AddAkka(ActorSystemConstants.ActorSystemName, configurationBuil
                     Role = ActorSystemConstants.BackendRole,
                     StateStoreMode = akkaConfiguration.ShardingOptions.UseDData
                         ? StateStoreMode.DData
-                        : StateStoreMode.Persistence
+                        : StateStoreMode.Persistence,
+                    PassivateIdleEntityAfter = TimeSpan.FromMinutes(2)
                 })
-
-            // duplicate region for producing graphs
-            // .WithShardRegion<OtherRegionMarker>("other", s => ItemActor.PropsFor(s, akkaConfiguration.DistributedPubSubOptions.Enabled), new ItemShardExtractor(),
-            //     new ShardOptions()
-            //     {
-            //         RememberEntities = akkaConfiguration.ShardingOptions.RememberEntities,
-            //         Role = ActorSystemConstants.BackendRole,
-            //         StateStoreMode = akkaConfiguration.ShardingOptions.UseDData ? StateStoreMode.DData : StateStoreMode.Persistence
-            //     })
             .WithItemMessagingActor();
             
     }
