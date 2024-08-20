@@ -1,4 +1,6 @@
-﻿# AkkaDotNet.LargeNetworkTests
+﻿# AkkaDotNet.LargeNetworkTests - Archived
+
+ > Archived as of 8-20-2024. We now have a number of internal repostories for running these tests in our test lab environment, but we're keeping this OSS so others can learn from it.
 
 This is a configurable Akka.NET application designed to test various dispatcher, heartbeat, and network settings inside large clusters (50-200 nodes) in a production Kubernetes environment.
 
